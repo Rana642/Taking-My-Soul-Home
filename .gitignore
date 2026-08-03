@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Next.js
+.next/
+out/
+
+# Leftover deploy artifact (see plan Step 12)
+hostinger-deploy.zip

@@ -1,0 +1,6 @@
+{
+  "name": "Taking My Soul Home",
+  "description": "A spiritual knowledge and cinematic storytelling platform inspiring hearts through Quranic wisdom, Hadith, video series, and reflections.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
