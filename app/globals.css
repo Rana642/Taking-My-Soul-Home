@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THEME — the single source of truth for brand colors & fonts.
+   This @theme block is the ONLY place raw hex values should live.
+   Change a value here and every component updates automatically.
+   ============================================================ */
+@theme {
+  /* Brand palette */
+  --color-brand-teal-dark: #0d373f; /* primary   */
+  --color-brand-teal:      #317582; /* secondary */
+  --color-brand-sage:      #9dae90; /* supporting */
+  --color-brand-gold:      #edbe7e; /* CTA accent */
+  --color-brand-cream:     #f6e9d6; /* light background */
+
+  /* Neutral text ink (kept from the original body color). */
+  --color-ink: #1e292b;
+
+  /* Typography */
+  --font-heading: "Higuen Elegant Serif", Georgia, serif;
+  --font-sans:    "Open Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-arabic:  "Amiri", serif;
+}
+
+@font-face {
+  font-family: "Higuen Elegant Serif";
+  src: url("/fonts/HiguenElegantSerif.otf") format("opentype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-weight: 400;               /* Open Sans regular */
+  }
+
+  h1, h2, h3, h4, .font-serif-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-arabic {
+    font-family: var(--font-arabic);
+  }
+}
+
+/* Simple fade-in used across the site */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-sage);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-teal-dark);
+}
+
+/* Legacy brand utility aliases (now theme-driven) */
+.bg-teal-brand   { background-color: var(--color-brand-teal-dark); }
+.text-teal-brand { color: var(--color-brand-teal-dark); }
+.bg-gold-accent  { background-color: var(--color-brand-gold); }
+.text-gold-accent{ color: var(--color-brand-gold); }
+.bg-sage-muted   { background-color: var(--color-brand-sage); }
+
+/* Soft transition effects */
+.smooth-transition {
+  transition: all 0.25s ease-in-out;
+}
