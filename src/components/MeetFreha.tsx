@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, HeartHandshake } from 'lucide-react';
 import { TEAM_INFO } from '../data/mockData';
 
@@ -31,7 +31,7 @@ export const MeetFreha: React.FC = () => {
 
           <div className="pt-2">
             <Link
-              to="/about"
+              href="/about"
               className="inline-flex px-5 py-2.5 rounded-full bg-brand-teal-dark text-white text-xs font-bold hover:bg-brand-teal transition-all items-center space-x-2 shadow-sm"
             >
               <span>Read Her Story</span>

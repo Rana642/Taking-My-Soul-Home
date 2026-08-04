@@ -1,4 +1,3 @@
-import React from 'react';
 import { HeroDailyVerse } from '../HeroDailyVerse';
 import { FeatureBadges } from '../FeatureBadges';
 import { FeaturedSeries } from '../FeaturedSeries';
@@ -9,39 +8,20 @@ import { SupportAndCommunity } from '../SupportAndCommunity';
 import { BlogSection } from '../BlogSection';
 import { PrayerTimesWidget } from '../PrayerTimesWidget';
 import { DailyReflectionToast } from '../DailyReflectionToast';
-import { AudioTrack, EpisodeItem } from '../../types';
 
-interface HomePageProps {
-  currentAudioTrack: AudioTrack | null;
-  isPlayingAudio: boolean;
-  onPlayAudioTrack: (track: AudioTrack) => void;
-  onSelectEpisode: (ep: EpisodeItem) => void;
-  onDonateClick: () => void;
-}
-
-export const HomePage: React.FC<HomePageProps> = ({
-  currentAudioTrack,
-  isPlayingAudio,
-  onPlayAudioTrack,
-  onSelectEpisode,
-  onDonateClick,
-}) => {
+export const HomePage: React.FC = () => {
   return (
     <main className="animate-fadeIn">
       <HeroDailyVerse />
       <FeatureBadges />
       <FeaturedSeries />
-      <LatestEpisodes onSelectEpisode={onSelectEpisode} />
+      <LatestEpisodes />
 
       <section className="py-14 bg-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-7">
-              <ListenAndReflect
-                currentTrack={currentAudioTrack}
-                isPlaying={isPlayingAudio}
-                onPlayTrack={onPlayAudioTrack}
-              />
+              <ListenAndReflect />
             </div>
             <div className="lg:col-span-5">
               <MeetFreha />
@@ -50,7 +30,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      <SupportAndCommunity onDonateClick={onDonateClick} />
+      <SupportAndCommunity />
       <BlogSection />
       <PrayerTimesWidget />
       <DailyReflectionToast />

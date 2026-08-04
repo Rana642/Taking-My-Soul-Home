@@ -1,16 +1,13 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Play, Clock, ArrowRight } from 'lucide-react';
 import { LATEST_EPISODES } from '../data/mockData';
-import { EpisodeItem } from '../types';
+import { useAppShell } from './app-shell-context';
 
-interface LatestEpisodesProps {
-  onSelectEpisode: (episode: EpisodeItem) => void;
-}
-
-export const LatestEpisodes: React.FC<LatestEpisodesProps> = ({
-  onSelectEpisode,
-}) => {
+export const LatestEpisodes: React.FC = () => {
+  const { selectEpisode } = useAppShell();
   return (
     <section className="py-14 bg-brand-cream text-ink">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +24,7 @@ export const LatestEpisodes: React.FC<LatestEpisodesProps> = ({
           </div>
 
           <Link
-            to="/episodes"
+            href="/episodes"
             className="mt-3 sm:mt-0 inline-flex items-center space-x-1.5 text-sm font-semibold text-brand-teal-dark hover:text-brand-teal transition-colors group"
           >
             <span>View All Episodes</span>
@@ -40,7 +37,7 @@ export const LatestEpisodes: React.FC<LatestEpisodesProps> = ({
           {LATEST_EPISODES.map((ep) => (
             <div
               key={ep.id}
-              onClick={() => onSelectEpisode(ep)}
+              onClick={() => selectEpisode(ep)}
               className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-brand-cream flex flex-col justify-between cursor-pointer"
             >
               {/* Thumbnail Container */}

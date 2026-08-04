@@ -1,13 +1,12 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Play, Clock, Search, Calendar, Film } from 'lucide-react';
 import { LATEST_EPISODES } from '../../data/mockData';
-import { EpisodeItem } from '../../types';
+import { useAppShell } from '../app-shell-context';
 
-interface EpisodesPageProps {
-  onSelectEpisode: (ep: EpisodeItem) => void;
-}
-
-export const EpisodesPage: React.FC<EpisodesPageProps> = ({ onSelectEpisode }) => {
+export const EpisodesPage: React.FC = () => {
+  const { selectEpisode } = useAppShell();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredEpisodes = LATEST_EPISODES.filter((ep) =>
@@ -50,7 +49,7 @@ export const EpisodesPage: React.FC<EpisodesPageProps> = ({ onSelectEpisode }) =
           {filteredEpisodes.map((ep) => (
             <div
               key={ep.id}
-              onClick={() => onSelectEpisode(ep)}
+              onClick={() => selectEpisode(ep)}
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between cursor-pointer group"
             >
               <div className="relative aspect-video bg-stone-900">

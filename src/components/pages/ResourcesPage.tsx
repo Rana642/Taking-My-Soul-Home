@@ -1,13 +1,12 @@
+'use client';
+
 import React from 'react';
 import { Download, FileText, Volume2, BookOpen, CheckCircle } from 'lucide-react';
 import { RESOURCES, AUDIO_TRACKS } from '../../data/mockData';
-import { AudioTrack } from '../../types';
+import { useAppShell } from '../app-shell-context';
 
-interface ResourcesPageProps {
-  onPlayTrack: (track: AudioTrack) => void;
-}
-
-export const ResourcesPage: React.FC<ResourcesPageProps> = ({ onPlayTrack }) => {
+export const ResourcesPage: React.FC = () => {
+  const { playAudioTrack: onPlayTrack } = useAppShell();
   const handleDownload = (itemTitle: string) => {
     alert(`Downloading "${itemTitle}"... Thank you for exploring Taking My Soul Home resources!`);
   };

@@ -1,11 +1,11 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Heart, Send, Sparkles, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
+import { useAppShell } from './app-shell-context';
 
-interface SupportAndCommunityProps {
-  onDonateClick: () => void;
-}
-
-export const SupportAndCommunity: React.FC<SupportAndCommunityProps> = ({ onDonateClick }) => {
+export const SupportAndCommunity: React.FC = () => {
+  const { openDonate } = useAppShell();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -38,7 +38,7 @@ export const SupportAndCommunity: React.FC<SupportAndCommunityProps> = ({ onDona
 
               <div className="mt-5">
                 <button
-                  onClick={onDonateClick}
+                  onClick={openDonate}
                   className="px-6 py-3 rounded-full bg-brand-gold text-brand-teal-dark font-bold text-sm shadow-md hover:bg-brand-gold transition-all flex items-center space-x-2 active:scale-95"
                 >
                   <span>Support Us</span>

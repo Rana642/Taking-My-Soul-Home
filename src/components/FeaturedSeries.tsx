@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { FEATURED_SERIES } from '../data/mockData';
 
@@ -19,7 +19,7 @@ export const FeaturedSeries: React.FC = () => {
             </h2>
           </div>
           <Link
-            to="/series"
+            href="/series"
             className="mt-4 sm:mt-0 inline-flex items-center space-x-1.5 text-sm font-semibold text-brand-teal-dark hover:text-brand-teal transition-colors group"
           >
             <span>View All Series</span>
@@ -32,7 +32,7 @@ export const FeaturedSeries: React.FC = () => {
           {FEATURED_SERIES.map((item) => (
             <Link
               key={item.id}
-              to="/series"
+              href="/series"
               className="group relative bg-brand-teal-dark rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer border border-brand-teal/40 hover:-translate-y-1"
             >
               {/* Image Banner */}

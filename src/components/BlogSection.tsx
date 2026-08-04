@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, Clock } from 'lucide-react';
 import { BLOG_POSTS } from '../data/mockData';
 
@@ -20,7 +20,7 @@ export const BlogSection: React.FC = () => {
           </div>
 
           <Link
-            to="/blog"
+            href="/blog"
             className="mt-4 sm:mt-0 inline-flex items-center space-x-1.5 text-sm font-semibold text-brand-teal-dark hover:text-brand-teal transition-colors group"
           >
             <span>View All Articles</span>
@@ -33,7 +33,7 @@ export const BlogSection: React.FC = () => {
           {BLOG_POSTS.map((post) => (
             <Link
               key={post.id}
-              to={`/blog/${post.slug}`}
+              href={`/blog/${post.slug}`}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between cursor-pointer hover:-translate-y-1"
             >
               {/* Featured Image */}

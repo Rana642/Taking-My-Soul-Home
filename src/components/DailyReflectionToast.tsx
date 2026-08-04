@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Sparkles, X, ArrowRight, BookOpen } from 'lucide-react';
 
 export const DailyReflectionToast: React.FC = () => {
@@ -56,7 +58,7 @@ export const DailyReflectionToast: React.FC = () => {
       <div className="pt-1 flex items-center justify-between">
         <span className="text-[10px] text-stone-400">Updated Today</span>
         <Link
-          to="/blog"
+          href="/blog"
           onClick={() => setIsVisible(false)}
           className="px-3.5 py-1.5 rounded-full bg-brand-gold text-brand-teal-dark font-bold text-xs hover:bg-brand-gold transition-all flex items-center space-x-1.5 shadow-sm"
         >

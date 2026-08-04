@@ -1,13 +1,13 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Play, ArrowRight, Film, Sparkles, Filter } from 'lucide-react';
 import { FEATURED_SERIES, LATEST_EPISODES } from '../../data/mockData';
-import { SeriesItem, EpisodeItem } from '../../types';
+import { SeriesItem } from '../../types';
+import { useAppShell } from '../app-shell-context';
 
-interface SeriesPageProps {
-  onSelectEpisode: (ep: EpisodeItem) => void;
-}
-
-export const SeriesPage: React.FC<SeriesPageProps> = ({ onSelectEpisode }) => {
+export const SeriesPage: React.FC = () => {
+  const { selectEpisode } = useAppShell();
   const [selectedSeries, setSelectedSeries] = useState<SeriesItem | null>(null);
   const [activeTag, setActiveTag] = useState<string>('ALL');
 
@@ -124,7 +124,7 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({ onSelectEpisode }) => {
               {LATEST_EPISODES.map((ep) => (
                 <div
                   key={ep.id}
-                  onClick={() => onSelectEpisode(ep)}
+                  onClick={() => selectEpisode(ep)}
                   className="p-4 rounded-xl bg-brand-cream border border-stone-200 hover:border-brand-teal-dark cursor-pointer transition-all flex items-center space-x-4"
                 >
                   <div className="w-10 h-10 rounded-full bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">

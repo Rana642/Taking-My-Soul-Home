@@ -1,19 +1,26 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowRight, Clock, Search, Filter } from 'lucide-react';
 import { BLOG_POSTS } from '../../data/mockData';
 import { BlogPostDetailView } from '../BlogPostDetailView';
 
-export const BlogPage: React.FC = () => {
-  const { slug } = useParams();
+interface BlogPageProps {
+  /** Present on /blog/[slug] → renders the single-post view. */
+  slug?: string;
+}
+
+export const BlogPage: React.FC<BlogPageProps> = ({ slug }) => {
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // If a slug is present in the URL, render the single-post view (or 404).
   if (slug) {
     const post = BLOG_POSTS.find((p) => p.slug === slug);
-    if (!post) return <Navigate to="/blog" replace />;
-    return <BlogPostDetailView post={post} />;
+    if (!post) notFound();
+    return <BlogPostDetailView post={post!} />;
   }
 
   const categories = ['ALL', 'Spiritual Growth', 'Stories', 'Reminders', 'Quran Reflections', 'Wazaif'];
@@ -80,7 +87,7 @@ export const BlogPage: React.FC = () => {
           {filteredPosts.map((post) => (
             <Link
               key={post.id}
-              to={`/blog/${post.slug}`}
+              href={`/blog/${post.slug}`}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between cursor-pointer"
             >
               <div className="relative h-52 overflow-hidden bg-stone-200">

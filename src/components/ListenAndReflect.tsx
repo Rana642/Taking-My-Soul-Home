@@ -1,20 +1,18 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Play, Pause, Download, Share2, Volume2, ArrowRight } from 'lucide-react';
 import { AUDIO_TRACKS } from '../data/mockData';
 import { AudioTrack } from '../types';
+import { useAppShell } from './app-shell-context';
 
-interface ListenAndReflectProps {
-  currentTrack: AudioTrack | null;
-  isPlaying: boolean;
-  onPlayTrack: (track: AudioTrack) => void;
-}
-
-export const ListenAndReflect: React.FC<ListenAndReflectProps> = ({
-  currentTrack,
-  isPlaying,
-  onPlayTrack,
-}) => {
+export const ListenAndReflect: React.FC = () => {
+  const {
+    currentAudioTrack: currentTrack,
+    isPlayingAudio: isPlaying,
+    playAudioTrack: onPlayTrack,
+  } = useAppShell();
   const handleShare = (track: AudioTrack) => {
     if (navigator.share) {
       navigator.share({
@@ -51,7 +49,7 @@ export const ListenAndReflect: React.FC<ListenAndReflectProps> = ({
             </h2>
           </div>
           <Link
-            to="/resources"
+            href="/resources"
             className="text-xs font-semibold text-brand-teal-dark hover:text-brand-teal flex items-center space-x-1 group"
           >
             <span>View All Audio</span>

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Compass, MapPin, Clock, Sun, Moon, Sunrise, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 

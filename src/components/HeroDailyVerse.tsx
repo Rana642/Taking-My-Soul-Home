@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Play, Copy, Check, Sparkles, RefreshCw, Quote, ArrowRight } from 'lucide-react';
 import { DAILY_VERSES } from '../data/mockData';
 import { DailyVerse } from '../types';
@@ -68,7 +70,7 @@ export const HeroDailyVerse: React.FC = () => {
 
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
               <Link
-                to="/series"
+                href="/series"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-brand-teal-dark text-brand-cream font-bold text-base shadow-xl hover:shadow-2xl hover:bg-brand-teal active:scale-98 transition-all flex items-center justify-center space-x-2 group"
               >
                 <span>Explore Series</span>
@@ -76,7 +78,7 @@ export const HeroDailyVerse: React.FC = () => {
               </Link>
 
               <Link
-                to="/episodes"
+                href="/episodes"
                 className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-transparent hover:bg-brand-teal-dark/10 text-brand-teal-dark border-2 border-brand-teal-dark font-medium text-base transition-all flex items-center justify-center space-x-2"
               >
                 <Play className="w-4 h-4 fill-brand-teal-dark text-brand-teal-dark" />

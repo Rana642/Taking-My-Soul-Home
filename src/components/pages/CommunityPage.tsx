@@ -1,13 +1,13 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Heart, ShoppingBag, Users, Sparkles, Check, Gift } from 'lucide-react';
 import { MERCH_ITEMS } from '../../data/mockData';
 import { MerchItem } from '../../types';
+import { useAppShell } from '../app-shell-context';
 
-interface CommunityPageProps {
-  onDonateClick: () => void;
-}
-
-export const CommunityPage: React.FC<CommunityPageProps> = ({ onDonateClick }) => {
+export const CommunityPage: React.FC = () => {
+  const { openDonate } = useAppShell();
   const [selectedMerch, setSelectedMerch] = useState<MerchItem | null>(null);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
@@ -128,7 +128,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onDonateClick }) =
             </p>
           </div>
           <button
-            onClick={onDonateClick}
+            onClick={openDonate}
             className="px-8 py-3.5 rounded-full bg-brand-gold text-brand-teal-dark font-bold text-sm shadow-lg hover:bg-brand-gold transition-all flex items-center space-x-2 shrink-0"
           >
             <Heart className="w-4 h-4 fill-brand-teal-dark" />

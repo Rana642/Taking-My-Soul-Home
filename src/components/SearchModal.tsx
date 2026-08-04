@@ -1,23 +1,22 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Search, X, Film, BookOpen, Volume2, ArrowRight } from 'lucide-react';
 import { FEATURED_SERIES, LATEST_EPISODES, BLOG_POSTS, AUDIO_TRACKS } from '../data/mockData';
-import { EpisodeItem, AudioTrack } from '../types';
+import { useAppShell } from './app-shell-context';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectEpisode: (episode: EpisodeItem) => void;
-  onSelectAudio: (track: AudioTrack) => void;
 }
 
 export const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
   onClose,
-  onSelectEpisode,
-  onSelectAudio,
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { selectEpisode, playAudioTrack } = useAppShell();
   const [query, setQuery] = useState('');
 
   if (!isOpen) return null;
@@ -116,7 +115,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={s.id}
                     onClick={() => {
-                      navigate('/series');
+                      router.push('/series');
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
@@ -143,7 +142,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={e.id}
                     onClick={() => {
-                      onSelectEpisode(e);
+                      selectEpisode(e);
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center justify-between transition-colors border border-brand-teal"
@@ -170,7 +169,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={p.id}
                     onClick={() => {
-                      navigate(`/blog/${p.slug}`);
+                      router.push(`/blog/${p.slug}`);
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
@@ -197,7 +196,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={a.id}
                     onClick={() => {
-                      onSelectAudio(a);
+                      playAudioTrack(a);
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"

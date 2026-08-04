@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Home, Compass } from 'lucide-react';
 
 export const NotFoundPage: React.FC = () => {
@@ -19,7 +19,7 @@ export const NotFoundPage: React.FC = () => {
           </p>
         </div>
         <Link
-          to="/"
+          href="/"
           className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-brand-teal-dark text-brand-gold font-bold text-sm hover:bg-brand-teal transition-colors"
         >
           <Home className="w-4 h-4" />

@@ -122,6 +122,10 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 - Remove Vite (`vite.config.ts`, `@vitejs/plugin-react`, `index.html`, `main.tsx`) once Next builds clean
 - Done when `next build` passes and every route renders server-side (view-source shows real content)
 
+**Progress (git: `ad35fc5` = Vite rollback point, `c84a5fe` = foundation):**
+- ✅ Foundation done + verified: Next 16 installed, `next.config.ts` / `postcss.config.mjs`, Tailwind v4 on postcss, `app/layout.tsx` (metadata API + fonts), `app/globals.css` (theme moved), placeholder `app/page.tsx`. `next build` passes; **SSR confirmed** — raw HTML contains content + `<title>` + meta description.
+- ⏳ Remaining (the bulk): create an `AppShell` client component + context to hold the modal/audio/search state `App.tsx` owns today (layout can't pass props to page children); port all ~20 components (`"use client"` + swap `react-router-dom` → `next/link` / `next/navigation`, prop-callbacks → context hooks); create the file-based route pages; replace the placeholder home with the real `HomePage`; delete Vite files; remove the temporary `ignoreBuildErrors`/`ignoreDuringBuilds` flags in `next.config.ts` and fix any real type errors.
+
 ### [ ] Step 6 — Technical SEO foundation (native Next.js)
 Now cheap because Next.js is in place. This is where SEO "lives" — split into technical-now vs content-later (content SEO waits for Step 11, since indexing placeholder content is pointless/harmful).
 - Per-page metadata via the Next.js `metadata` API / `generateMetadata`: unique `<title>`, description, canonical, Open Graph + Twitter Card tags (fixes WhatsApp/social link previews)

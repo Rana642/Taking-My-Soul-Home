@@ -1,11 +1,11 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Search, Heart, Menu, X } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
-
-interface NavbarProps {
-  onOpenSearch: () => void;
-}
+import { useAppShell } from './app-shell-context';
 
 const NAV_ITEMS = [
   { to: '/',          label: 'Home' },
@@ -24,9 +24,10 @@ function isRouteActive(pathname: string, to: string): boolean {
   return pathname === to || pathname.startsWith(to + '/');
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
+export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { pathname } = useLocation();
+  const pathname = usePathname();
+  const { openSearch } = useAppShell();
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -37,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
           {/* Logo & Brand Name */}
           <Link
-            to="/"
+            href="/"
             onClick={closeMobileMenu}
             className="flex items-center text-left group focus:outline-none py-1"
             aria-label="Taking My Soul Home - Return to Home"
@@ -52,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               return (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  href={item.to}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
                     active
                       ? 'text-brand-teal-dark font-semibold bg-brand-teal-dark/10'
@@ -71,7 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           {/* Right Action Icons & Support CTA */}
           <div className="hidden sm:flex items-center space-x-3">
             <button
-              onClick={onOpenSearch}
+              onClick={openSearch}
               className="p-2.5 text-brand-teal-dark hover:text-brand-teal-dark hover:bg-brand-teal-dark/10 rounded-full transition-colors flex items-center justify-center focus:outline-none"
               title="Search website"
               aria-label="Search website"
@@ -80,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </button>
 
             <Link
-              to="/community"
+              href="/community"
               onClick={closeMobileMenu}
               className="px-4 py-2.5 rounded-full bg-brand-teal-dark text-brand-cream font-semibold text-sm shadow-md hover:shadow-lg hover:bg-brand-teal transition-all flex items-center space-x-1.5 active:scale-95"
             >
@@ -92,7 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           {/* Mobile Menu Toggle Button */}
           <div className="flex items-center space-x-2 lg:hidden">
             <button
-              onClick={onOpenSearch}
+              onClick={openSearch}
               className="p-2 text-brand-teal-dark hover:text-brand-teal-dark/70 focus:outline-none"
               aria-label="Search"
             >
@@ -119,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               return (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  href={item.to}
                   onClick={closeMobileMenu}
                   className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                     active
@@ -135,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
           <div className="pt-3 border-t border-brand-teal-dark/15 flex items-center justify-between">
             <Link
-              to="/community"
+              href="/community"
               onClick={closeMobileMenu}
               className="w-full py-3 rounded-xl bg-brand-teal-dark text-brand-cream font-bold text-center flex items-center justify-center space-x-2"
             >

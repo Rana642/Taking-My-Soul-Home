@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, X, SkipForward, SkipBack, Download } from 'lucide-react';
 import { AudioTrack } from '../types';

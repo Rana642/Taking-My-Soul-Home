@@ -1,11 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Youtube, Instagram, Facebook, Send, Check } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
-
-interface FooterProps {
-  onDonateClick: () => void;
-}
+import { useAppShell } from './app-shell-context';
 
 const QUICK_LINKS = [
   { to: '/',          label: 'Home' },
@@ -15,7 +14,8 @@ const QUICK_LINKS = [
   { to: '/resources', label: 'Resources' },
 ];
 
-export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
+export const Footer: React.FC = () => {
+  const { openDonate } = useAppShell();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-4">
             <Link
-              to="/"
+              href="/"
               className="text-left group focus:outline-none block py-1"
               aria-label="Taking My Soul Home - Home"
             >
@@ -81,7 +81,7 @@ export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
             <ul className="space-y-2 text-xs text-stone-300">
               {QUICK_LINKS.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="hover:text-brand-gold transition-colors">
+                  <Link href={item.to} className="hover:text-brand-gold transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -95,16 +95,16 @@ export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
               Helpful Links
             </h4>
             <ul className="space-y-2 text-xs text-stone-300">
-              <li><Link to="/about"     className="hover:text-brand-gold">About Us</Link></li>
-              <li><Link to="/about"     className="hover:text-brand-gold">Freha Wahla Profile</Link></li>
-              <li><Link to="/about"     className="hover:text-brand-gold">crea8ovia Production</Link></li>
-              <li><Link to="/community" className="hover:text-brand-gold">Community</Link></li>
+              <li><Link href="/about"     className="hover:text-brand-gold">About Us</Link></li>
+              <li><Link href="/about"     className="hover:text-brand-gold">Freha Wahla Profile</Link></li>
+              <li><Link href="/about"     className="hover:text-brand-gold">crea8ovia Production</Link></li>
+              <li><Link href="/community" className="hover:text-brand-gold">Community</Link></li>
               <li>
-                <button onClick={onDonateClick} className="hover:text-brand-gold text-brand-gold">
+                <button onClick={openDonate} className="hover:text-brand-gold text-brand-gold">
                   Support / Donate
                 </button>
               </li>
-              <li><Link to="/contact"   className="hover:text-brand-gold">Contact Us</Link></li>
+              <li><Link href="/contact"   className="hover:text-brand-gold">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -114,10 +114,10 @@ export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
               Legal & Policy
             </h4>
             <ul className="space-y-2 text-xs text-stone-300">
-              <li><Link to="/legal/privacy"    className="hover:text-brand-gold">Privacy Policy</Link></li>
-              <li><Link to="/legal/disclaimer" className="hover:text-brand-gold">Disclaimer</Link></li>
-              <li><Link to="/legal/terms"      className="hover:text-brand-gold">Terms & Conditions</Link></li>
-              <li><Link to="/legal/sitemap"    className="hover:text-brand-gold">Sitemap</Link></li>
+              <li><Link href="/legal/privacy"    className="hover:text-brand-gold">Privacy Policy</Link></li>
+              <li><Link href="/legal/disclaimer" className="hover:text-brand-gold">Disclaimer</Link></li>
+              <li><Link href="/legal/terms"      className="hover:text-brand-gold">Terms & Conditions</Link></li>
+              <li><Link href="/legal/sitemap"    className="hover:text-brand-gold">Sitemap</Link></li>
             </ul>
           </div>
 
@@ -175,11 +175,11 @@ export const Footer: React.FC<FooterProps> = ({ onDonateClick }) => {
             </a>
           </p>
           <div className="flex items-center space-x-4">
-            <Link to="/legal/sitemap" className="hover:text-white">Sitemap</Link>
+            <Link href="/legal/sitemap" className="hover:text-white">Sitemap</Link>
             <span>|</span>
-            <Link to="/legal/privacy" className="hover:text-white">Privacy Policy</Link>
+            <Link href="/legal/privacy" className="hover:text-white">Privacy Policy</Link>
             <span>|</span>
-            <Link to="/legal/terms"   className="hover:text-white">Terms & Conditions</Link>
+            <Link href="/legal/terms"   className="hover:text-white">Terms & Conditions</Link>
           </div>
         </div>
 

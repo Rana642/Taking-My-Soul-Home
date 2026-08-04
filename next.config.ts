@@ -5,11 +5,16 @@ const nextConfig: NextConfig = {
   // served at the site root, same as before.
   reactStrictMode: true,
 
-  // TEMPORARY during the Vite→Next migration (plan Step 5): the un-converted
-  // src/ components still import react-router-dom, which would fail the build.
-  // Remove BOTH of these once every component is ported and Vite is deleted.
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
+  // Back-compat: the old app switched on bare /privacy, /terms, etc.
+  // 301 them to the canonical /legal/* URLs (good for SEO).
+  async redirects() {
+    return [
+      { source: '/privacy', destination: '/legal/privacy', permanent: true },
+      { source: '/terms', destination: '/legal/terms', permanent: true },
+      { source: '/disclaimer', destination: '/legal/disclaimer', permanent: true },
+      { source: '/sitemap', destination: '/legal/sitemap', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

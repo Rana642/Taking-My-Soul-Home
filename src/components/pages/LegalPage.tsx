@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { notFound } from 'next/navigation';
 
 type LegalType = 'privacy' | 'terms' | 'disclaimer' | 'sitemap';
 
@@ -10,9 +10,8 @@ const TITLES: Record<LegalType, string> = {
   sitemap: 'Sitemap & Directory',
 };
 
-export const LegalPage: React.FC = () => {
-  const { type: rawType } = useParams<{ type: string }>();
-  if (!rawType || !(rawType in TITLES)) return <Navigate to="/" replace />;
+export const LegalPage: React.FC<{ type: string }> = ({ type: rawType }) => {
+  if (!(rawType in TITLES)) notFound();
   const type = rawType as LegalType;
 
   return (

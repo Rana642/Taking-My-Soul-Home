@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { X, Play, Download, Share2, Check, FileText, MessageSquare, ThumbsUp } from 'lucide-react';
 import { EpisodeItem } from '../types';

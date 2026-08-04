@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowLeft, Clock, Calendar, User, Share2, Bookmark, Check, ThumbsUp, MessageSquare, Type } from 'lucide-react';
 import { BlogPost } from '../types';
 import { BLOG_POSTS } from '../data/mockData';
@@ -68,7 +70,7 @@ export const BlogPostDetailView: React.FC<BlogPostDetailViewProps> = ({
         {/* Top Back Navigation & Controls Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-brand-cream">
           <Link
-            to="/blog"
+            href="/blog"
             className="inline-flex items-center space-x-2 text-sm font-semibold text-brand-teal-dark hover:text-brand-teal transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -281,7 +283,7 @@ export const BlogPostDetailView: React.FC<BlogPostDetailViewProps> = ({
             {relatedPosts.map((rPost) => (
               <Link
                 key={rPost.id}
-                to={`/blog/${rPost.slug}`}
+                href={`/blog/${rPost.slug}`}
                 className="bg-white rounded-xl overflow-hidden border border-brand-cream p-3 shadow-xs hover:shadow-md cursor-pointer transition-all"
               >
                 <img

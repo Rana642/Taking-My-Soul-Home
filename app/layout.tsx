@@ -1,5 +1,24 @@
 import type { Metadata } from 'next';
+import { Open_Sans, Amiri } from 'next/font/google';
 import './globals.css';
+import { AppShell } from '../src/components/AppShell';
+
+// Self-hosted via next/font (no external request, no layout shift).
+// Exposed as CSS variables consumed by the @theme block in globals.css.
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-open-sans',
+  display: 'swap',
+});
+
+const amiri = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-amiri',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Taking My Soul Home - Islamic Knowledge & Cinematic Storytelling',
@@ -13,19 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      {/* Google Fonts: Open Sans (body) + Amiri (Arabic). Higuen Elegant Serif
-          (headings) is a local @font-face in globals.css. Next hoists these
-          <link> tags into <head>. (Can move to next/font later — kept as links
-          so the build never depends on fetching fonts at build time.) */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap"
-        rel="stylesheet"
-      />
+    <html lang="en" className={`${openSans.variable} ${amiri.variable}`}>
       <body className="min-h-screen flex flex-col bg-brand-cream text-ink font-sans antialiased selection:bg-brand-gold/40 selection:text-brand-teal-dark">
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
