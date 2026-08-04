@@ -188,7 +188,8 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 - Full QA pass: mobile responsiveness, cross-browser, broken-link check, PageSpeed Insights
 
 ### [ ] Step 13 — Launch
-- Deploy frontend to Vercel; connect real domain
+- **Preview already live** (ahead of schedule): GitHub `Rana642/Taking-My-Soul-Home` (branch `main`) auto-deploys to Vercel → https://taking-my-soul-home.vercel.app — currently **noindex** (robots meta + robots.txt Disallow) via `NEXT_PUBLIC_ALLOW_INDEXING=false`. All routes/redirects/404 verified live.
+- At launch: set `NEXT_PUBLIC_ALLOW_INDEXING=true` + `NEXT_PUBLIC_SITE_URL` in Vercel; connect real domain (`takingmysoulhome.com` → Vercel, `cms.` → Hostinger WP)
 - **Submit sitemap to Google Search Console + Bing Webmaster Tools**
 - Set up Google Analytics 4
 - Final stakeholder review and go-live
