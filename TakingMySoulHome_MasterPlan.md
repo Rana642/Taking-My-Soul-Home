@@ -163,7 +163,11 @@ Applied and verified end-to-end via the **Novamira MCP** (connected to this sess
 - **Verified:** in-process + **external** GraphQL query returns all types with no errors; `episodeFields`/`seriesFields`/`resourceFields`/`audioFields` all resolve. Backend set `blog_public=0` (noindex).
 - **GraphQL endpoint (for Step 9 / Vercel env):** `https://olive-echidna-540346.hostingersite.com/graphql`
 
-**⬅️ NEXT ACTION: Step 9 — connect the frontend. WordPress is empty; either (a) seed it with the current mockData via Novamira (gives Step 9 real data + gives Freha an editable structure), then wire the frontend GraphQL queries + ISR; or (b) build the queries now and populate content in Step 11.**
+**Seeded (via Novamira):** `wordpress/seed-data.json` + `wordpress/seed-runner.php` (idempotent) populated **6 series, 5 episodes, 5 blog posts, 4 audio, 3 resources** — matching the old `mockData.ts`. Featured images sideloaded into WP media. Verified via external GraphQL (content + images + relations + author "Freha Wahla"). Freha can now edit/replace everything in wp-admin.
+
+**Step 9 mapping notes (for next):** WPGraphQL-for-ACF returns ACF `select` fields as **arrays** (e.g. `audioCategory: ["Kalam"]`, `resourceType: ["pdf"]`) → take `[0]`. Episode→Series `post_object` field (`episodeFields.series`) resolves as a connection. Endpoint: `https://olive-echidna-540346.hostingersite.com/graphql`.
+
+**⬅️ NEXT ACTION: Step 9 — build the GraphQL client + typed queries, map WP → frontend types, replace `src/data/mockData.ts` reads with live queries (ISR), set `WORDPRESS_GRAPHQL_URL` in Vercel.**
 
 ### [ ] Step 9 — Connect frontend to WordPress via GraphQL
 - Replace all reads from `src/data/mockData.ts` with live GraphQL queries to WordPress
