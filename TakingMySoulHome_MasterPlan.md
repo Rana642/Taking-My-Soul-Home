@@ -204,6 +204,7 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 - **SEO priority:** Real routing + proper meta/schema setup is treated as a hard requirement, not a nice-to-have, because SEO/organic growth is the core business goal behind this whole rebuild
 - **Rendering framework:** Migrating Vite → **Next.js (App Router)** for SSR/SSG — required for real SEO. Locked (was open question in §7).
 - **Language:** **English only.** No Urdu/bilingual. No `hreflang`, no `/en` `/ur` URL split — keep URLs flat.
+- **Hosting (locked):** frontend (Next.js) → **Vercel** (Hobby/free, auto-deploy from GitHub, full SSR/ISR — no static export). WordPress backend → **Hostinger** (Shared/Premium plan) on a subdomain e.g. `cms.takingmysoulhome.com`, admin-only/headless. User considered all-Hostinger but chose Vercel to keep ISR (live content updates) without a rebuild-and-reupload workflow.
 
 ---
 
@@ -211,5 +212,5 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 
 - ~~Vite → Next.js migration?~~ **RESOLVED: yes, Next.js App Router (now Step 5).**
 - ~~Bilingual/Urdu?~~ **RESOLVED: English only.**
-- Final hosting: frontend → Vercel (assumed). WordPress backend host still TBD.
+- ~~Final hosting?~~ **RESOLVED: Vercel (frontend) + Hostinger Shared (WordPress on `cms.` subdomain).**
 - Whether the raster/vector format of the new logo files needs a vector re-export for perfect scaling at very large sizes
