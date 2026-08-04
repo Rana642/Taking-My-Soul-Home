@@ -5,7 +5,7 @@ import './globals.css';
 import { AppShell } from '../src/components/AppShell';
 import { JsonLd } from '../src/lib/JsonLd';
 import { organizationSchema, websiteSchema } from '../src/lib/schema';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, DEFAULT_OG_IMAGE } from '../src/lib/site';
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, DEFAULT_OG_IMAGE, ALLOW_INDEXING } from '../src/lib/site';
 
 // Self-hosted via next/font (no external request, no layout shift, auto-preload).
 const openSans = Open_Sans({
@@ -56,7 +56,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [DEFAULT_OG_IMAGE],
   },
-  robots: { index: true, follow: true },
+  // Gated: preview deploys stay noindex until NEXT_PUBLIC_ALLOW_INDEXING=true.
+  robots: ALLOW_INDEXING
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export default function RootLayout({

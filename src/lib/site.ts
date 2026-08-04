@@ -9,6 +9,14 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://takingmysoulhome.com'
 ).replace(/\/$/, '');
 
+/**
+ * Search-engine indexing gate. OFF by default so preview/staging deploys
+ * (with placeholder content) are never indexed. Set NEXT_PUBLIC_ALLOW_INDEXING
+ * = "true" in Vercel at launch, once real content is in and the real domain is
+ * connected.
+ */
+export const ALLOW_INDEXING = process.env.NEXT_PUBLIC_ALLOW_INDEXING === 'true';
+
 export const SITE_NAME = 'Taking My Soul Home';
 
 export const SITE_TAGLINE = 'Islamic Knowledge & Cinematic Storytelling';
