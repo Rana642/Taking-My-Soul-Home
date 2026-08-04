@@ -144,10 +144,16 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 
 **⬅️ NEXT ACTION: Step 7 — build the real Single Episode page (`/episodes/[slug]`) + `/series/[slug]`, with `VideoObject` schema.**
 
-### [ ] Step 7 — Build a real Single Episode page
-- Full page at `/episodes/[slug]`: video embed, transcript/summary, key takeaways, related episodes, share buttons
-- Add `VideoObject` schema here (thumbnail, embedUrl, duration, transcript)
-- Same treatment for `/series/[slug]` (deferred from Step 4)
+### ✅ Step 7 — Real Single Episode + Series pages — DONE
+(git `ce20487`) Slugs are derived from titles in `src/lib/content.ts` (WordPress will provide real slug fields in Step 9).
+- `/episodes/[slug]` (`EpisodeDetailView`, client): YouTube embed, series link, date/duration/views, key-takeaways (renders if present), transcript, audio download, share, related episodes (same-series first). `VideoObject` + `BreadcrumbList` JSON-LD; `generateMetadata`; SSG.
+- `/series/[slug]` (`SeriesDetailView`, server): banner + "episodes in this series" grid. `BreadcrumbList` JSON-LD; `generateMetadata`; SSG.
+- All episode/series cards (LatestEpisodes, EpisodesPage, SeriesPage, FeaturedSeries, SearchModal) now navigate to the detail pages.
+- Removed the redundant `VideoPlayerModal` + `selectEpisode` from AppShell/context; SeriesPage's inline drawer replaced by the real page.
+- `sitemap.ts` now includes series + episode URLs (28 total).
+- **Note:** episode `keyTakeaways` are absent in mock data so that section is hidden for now (populated in Step 11 / via WordPress).
+
+**⬅️ NEXT ACTION: Step 8 — WordPress backend (WPGraphQL + ACF, custom post types Series/Episode/Resource).**
 
 ### [ ] Step 8 — WordPress backend setup
 - Install WordPress (admin-only, not public-facing)
