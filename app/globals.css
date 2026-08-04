@@ -16,19 +16,12 @@
   /* Neutral text ink (kept from the original body color). */
   --color-ink: #1e292b;
 
-  /* Typography — Open Sans & Amiri come from next/font (see layout.tsx),
-     exposed as CSS variables. Higuen headings via local @font-face below. */
-  --font-heading: "Higuen Elegant Serif", Georgia, serif;
+  /* Typography — all three come from next/font (see layout.tsx), exposed as
+     CSS variables so the @theme utilities (font-sans / font-serif-heading /
+     font-arabic) resolve to the self-hosted, preloaded fonts. */
+  --font-heading: var(--font-higuen), Georgia, serif;
   --font-sans:    var(--font-open-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-arabic:  var(--font-amiri), "Amiri", serif;
-}
-
-@font-face {
-  font-family: "Higuen Elegant Serif";
-  src: url("/fonts/HiguenElegantSerif.otf") format("opentype");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
 }
 
 @layer base {
