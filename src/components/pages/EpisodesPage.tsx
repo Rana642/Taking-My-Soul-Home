@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, Clock, Search, Calendar, Film } from 'lucide-react';
+import Link from 'next/link';
+import { Play, Search, Calendar } from 'lucide-react';
 import { LATEST_EPISODES } from '../../data/mockData';
-import { useAppShell } from '../app-shell-context';
+import { episodeSlug } from '../../lib/content';
 
 export const EpisodesPage: React.FC = () => {
-  const { selectEpisode } = useAppShell();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredEpisodes = LATEST_EPISODES.filter((ep) =>
@@ -47,10 +47,10 @@ export const EpisodesPage: React.FC = () => {
         {/* Episodes Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEpisodes.map((ep) => (
-            <div
+            <Link
               key={ep.id}
-              onClick={() => selectEpisode(ep)}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between cursor-pointer group"
+              href={`/episodes/${episodeSlug(ep)}`}
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between group"
             >
               <div className="relative aspect-video bg-stone-900">
                 <img
@@ -90,7 +90,7 @@ export const EpisodesPage: React.FC = () => {
                 </div>
               </div>
 
-            </div>
+            </Link>
           ))}
         </div>
 

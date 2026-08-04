@@ -1,5 +1,6 @@
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from './site';
-import type { BlogPost } from '../types';
+import type { BlogPost, EpisodeItem } from '../types';
+import { episodeSlug, durationToISO, youtubeEmbedUrl } from './content';
 
 const publisher = {
   '@type': 'Organization',
@@ -91,6 +92,25 @@ export function blogPostingSchema(post: BlogPost) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
     ...(post.tags?.length ? { keywords: post.tags.join(', ') } : {}),
+  };
+}
+
+export function videoObjectSchema(ep: EpisodeItem) {
+  const url = absoluteUrl(`/episodes/${episodeSlug(ep)}`);
+  const parsed = new Date(ep.date);
+  const uploadDate = isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
+  const duration = durationToISO(ep.duration);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: ep.title,
+    description: ep.excerpt,
+    thumbnailUrl: ep.thumbnail,
+    ...(uploadDate ? { uploadDate } : {}),
+    ...(duration ? { duration } : {}),
+    ...(ep.youtubeEmbedId ? { embedUrl: youtubeEmbedUrl(ep.youtubeEmbedId) } : {}),
+    url,
+    publisher,
   };
 }
 

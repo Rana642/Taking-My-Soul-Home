@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/src/lib/site';
 import { BLOG_POSTS } from '@/src/data/mockData';
+import { getAllEpisodes, getAllSeries, episodeSlug, seriesSlug } from '@/src/lib/content';
 
 // Static list for now; becomes WordPress/GraphQL-driven in Step 9.
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -29,5 +30,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticEntries, ...blogEntries];
+  const seriesEntries: MetadataRoute.Sitemap = getAllSeries().map((s) => ({
+    url: `${SITE_URL}/series/${seriesSlug(s)}`,
+    lastModified: now,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  const episodeEntries: MetadataRoute.Sitemap = getAllEpisodes().map((ep) => {
+    const d = new Date(ep.date);
+    return {
+      url: `${SITE_URL}/episodes/${episodeSlug(ep)}`,
+      lastModified: isNaN(d.getTime()) ? now : d,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    };
+  });
+
+  return [...staticEntries, ...seriesEntries, ...episodeEntries, ...blogEntries];
 }

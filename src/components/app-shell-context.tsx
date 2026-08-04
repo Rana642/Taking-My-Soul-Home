@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { AudioTrack, EpisodeItem } from '../types';
+import { AudioTrack } from '../types';
 
 /**
  * Global chrome state that used to live in App.tsx and was passed down as
@@ -12,7 +12,6 @@ import { AudioTrack, EpisodeItem } from '../types';
 export interface AppShellValue {
   openSearch: () => void;
   openDonate: () => void;
-  selectEpisode: (ep: EpisodeItem) => void;
   playAudioTrack: (track: AudioTrack) => void;
   currentAudioTrack: AudioTrack | null;
   isPlayingAudio: boolean;

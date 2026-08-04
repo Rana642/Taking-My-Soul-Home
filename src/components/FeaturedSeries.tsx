@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { FEATURED_SERIES } from '../data/mockData';
+import { seriesSlug } from '../lib/content';
 
 export const FeaturedSeries: React.FC = () => {
   return (
@@ -32,7 +33,7 @@ export const FeaturedSeries: React.FC = () => {
           {FEATURED_SERIES.map((item) => (
             <Link
               key={item.id}
-              href="/series"
+              href={`/series/${seriesSlug(item)}`}
               className="group relative bg-brand-teal-dark rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer border border-brand-teal/40 hover:-translate-y-1"
             >
               {/* Image Banner */}

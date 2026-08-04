@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, ArrowRight, Film, Sparkles, Filter } from 'lucide-react';
-import { FEATURED_SERIES, LATEST_EPISODES } from '../../data/mockData';
-import { SeriesItem } from '../../types';
-import { useAppShell } from '../app-shell-context';
+import Link from 'next/link';
+import { ArrowRight, Filter } from 'lucide-react';
+import { FEATURED_SERIES } from '../../data/mockData';
+import { seriesSlug } from '../../lib/content';
 
 export const SeriesPage: React.FC = () => {
-  const { selectEpisode } = useAppShell();
-  const [selectedSeries, setSelectedSeries] = useState<SeriesItem | null>(null);
   const [activeTag, setActiveTag] = useState<string>('ALL');
 
   const tags = ['ALL', 'NAMES OF ALLAH', 'HEART REFLECTIONS', 'PROPHETIC TALES', 'WEEKLY WISDOM', 'SPIRITUAL WARFARE'];
@@ -20,7 +18,7 @@ export const SeriesPage: React.FC = () => {
   return (
     <div className="py-12 bg-brand-cream text-ink min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Banner */}
         <div className="bg-brand-teal-dark text-white rounded-3xl p-8 sm:p-12 mb-12 shadow-xl border border-brand-teal relative overflow-hidden">
           <div className="relative z-10 max-w-2xl">
@@ -58,15 +56,16 @@ export const SeriesPage: React.FC = () => {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredSeries.map((series) => (
-            <div
+            <Link
               key={series.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between"
+              href={`/series/${seriesSlug(series)}`}
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between group"
             >
               <div className="relative h-56 overflow-hidden">
                 <img
                   src={series.thumbnail}
                   alt={series.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <span className="absolute top-4 left-4 px-3 py-1 rounded-md bg-brand-teal-dark/90 text-brand-gold text-xs font-bold uppercase">
                   {series.tag}
@@ -75,7 +74,7 @@ export const SeriesPage: React.FC = () => {
 
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-serif-heading text-xl font-bold text-brand-teal-dark">
+                  <h3 className="font-serif-heading text-xl font-bold text-brand-teal-dark group-hover:text-brand-teal">
                     {series.title}
                   </h3>
                   <p className="text-xs font-semibold text-brand-teal-dark mt-1">
@@ -90,55 +89,15 @@ export const SeriesPage: React.FC = () => {
                   <span className="text-xs font-semibold text-stone-500">
                     {series.episodeCount > 0 ? `${series.episodeCount} Episodes` : 'Coming Soon'}
                   </span>
-                  
-                  <button
-                    onClick={() => setSelectedSeries(series)}
-                    className="px-4 py-2 rounded-full bg-brand-teal-dark text-brand-gold text-xs font-bold hover:bg-brand-teal transition-colors flex items-center space-x-1"
-                  >
+                  <span className="px-4 py-2 rounded-full bg-brand-teal-dark text-brand-gold text-xs font-bold group-hover:bg-brand-teal transition-colors flex items-center space-x-1">
                     <span>View Episodes</span>
                     <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
-
-        {/* Selected Series Detail Drawer/Modal */}
-        {selectedSeries && (
-          <div className="mt-16 bg-white p-8 rounded-2xl border border-brand-cream shadow-lg">
-            <div className="flex justify-between items-center mb-6 pb-4 border-b">
-              <div>
-                <span className="text-xs font-bold text-brand-teal-dark uppercase">{selectedSeries.tag}</span>
-                <h3 className="font-serif-heading text-2xl font-bold text-brand-teal-dark">{selectedSeries.title} Episodes</h3>
-              </div>
-              <button
-                onClick={() => setSelectedSeries(null)}
-                className="text-xs font-bold text-stone-500 hover:text-stone-800"
-              >
-                Close View
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {LATEST_EPISODES.map((ep) => (
-                <div
-                  key={ep.id}
-                  onClick={() => selectEpisode(ep)}
-                  className="p-4 rounded-xl bg-brand-cream border border-stone-200 hover:border-brand-teal-dark cursor-pointer transition-all flex items-center space-x-4"
-                >
-                  <div className="w-10 h-10 rounded-full bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">
-                    <Play className="w-5 h-5 fill-current ml-0.5" />
-                  </div>
-                  <div>
-                    <h4 className="font-serif-heading text-sm font-bold text-brand-teal-dark">{ep.title}</h4>
-                    <p className="text-xs text-stone-500">{ep.duration} • {ep.date}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
       </div>
     </div>

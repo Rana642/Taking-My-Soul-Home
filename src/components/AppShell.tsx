@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
-import { VideoPlayerModal } from './VideoPlayerModal';
 import { AudioPlayerGlobal } from './AudioPlayerGlobal';
 import { SearchModal } from './SearchModal';
 import { DonationModal } from './DonationModal';
 import { AppShellContext, AppShellValue } from './app-shell-context';
-import { AudioTrack, EpisodeItem } from '../types';
+import { AudioTrack } from '../types';
 
 /**
  * Client shell rendered once by the root layout. Owns the transient overlay
@@ -16,7 +15,6 @@ import { AudioTrack, EpisodeItem } from '../types';
  * Footer + the overlays, exposing triggers via AppShellContext.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const [selectedEpisode, setSelectedEpisode] = useState<EpisodeItem | null>(null);
   const [currentAudioTrack, setCurrentAudioTrack] = useState<AudioTrack | null>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -34,7 +32,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const value: AppShellValue = {
     openSearch: () => setIsSearchOpen(true),
     openDonate: () => setIsDonateOpen(true),
-    selectEpisode: setSelectedEpisode,
     playAudioTrack,
     currentAudioTrack,
     isPlayingAudio,
@@ -45,11 +42,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
       <div className="flex-1">{children}</div>
       <Footer />
-
-      <VideoPlayerModal
-        episode={selectedEpisode}
-        onClose={() => setSelectedEpisode(null)}
-      />
 
       <AudioPlayerGlobal
         track={currentAudioTrack}

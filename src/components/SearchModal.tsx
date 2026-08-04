@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Search, X, Film, BookOpen, Volume2, ArrowRight } from 'lucide-react';
 import { FEATURED_SERIES, LATEST_EPISODES, BLOG_POSTS, AUDIO_TRACKS } from '../data/mockData';
 import { useAppShell } from './app-shell-context';
+import { episodeSlug, seriesSlug } from '../lib/content';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
 }) => {
   const router = useRouter();
-  const { selectEpisode, playAudioTrack } = useAppShell();
+  const { playAudioTrack } = useAppShell();
   const [query, setQuery] = useState('');
 
   if (!isOpen) return null;
@@ -115,7 +116,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={s.id}
                     onClick={() => {
-                      router.push('/series');
+                      router.push(`/series/${seriesSlug(s)}`);
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
@@ -142,7 +143,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <div
                     key={e.id}
                     onClick={() => {
-                      selectEpisode(e);
+                      router.push(`/episodes/${episodeSlug(e)}`);
                       onClose();
                     }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center justify-between transition-colors border border-brand-teal"
