@@ -133,13 +133,16 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 
 **⬅️ NEXT ACTION: Step 6 — technical SEO foundation (metadata per route, JSON-LD schema, sitemap, robots).**
 
-### [ ] Step 6 — Technical SEO foundation (native Next.js)
-Now cheap because Next.js is in place. This is where SEO "lives" — split into technical-now vs content-later (content SEO waits for Step 11, since indexing placeholder content is pointless/harmful).
-- Per-page metadata via the Next.js `metadata` API / `generateMetadata`: unique `<title>`, description, canonical, Open Graph + Twitter Card tags (fixes WhatsApp/social link previews)
-- JSON-LD schema: `Organization` + `WebSite`(SearchAction) site-wide; `Person` + `Book` (×2, Austin Macauley, ISBNs) for Freha Wahla — this is the core E-E-A-T signal; `BreadcrumbList` on inner pages; `BlogPosting` on posts. (`VideoObject`/`AudioObject` deferred to Step 7 / when real media lands.)
-- `robots.txt` + static `sitemap.xml` (later made dynamic in Step 9 once WP slugs are live)
-- Core Web Vitals: preload Higuen font, confirm LCP <2.5s / CLS <0.1 / INP <200ms
-- (Search Console / Bing submission + GA4 happen at Step 13 launch, against real content)
+### ✅ Step 6 — Technical SEO foundation (native Next.js) — DONE
+(git `aa754ab`) Content SEO still waits for Step 11 (indexing placeholder content is pointless); this is the technical layer.
+- `src/lib/site.ts`: `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, fallback `https://takingmysoulhome.com` — **confirm domain**) + `pageMetadata()` builder (title/description/canonical/OG/Twitter). Root layout has `metadataBase` + title template + defaults.
+- Per-page metadata on every route; `generateMetadata` for `/blog/[slug]` + `/legal/[type]` (both now **SSG** via `generateStaticParams`).
+- JSON-LD (`src/lib/schema.ts` + `JsonLd.tsx`): `Organization` + `WebSite` site-wide; `Person` + 2× `Book` (Austin Macauley) + `BreadcrumbList` on `/about`; `BlogPosting` + `BreadcrumbList` on posts. Verified in raw HTML.
+- `app/sitemap.ts` (17 urls) + `app/robots.ts` — both serve valid output.
+- Higuen moved to `next/font/local` (preloaded, no FOUT); Open Sans + Amiri already next/font.
+- **Open TODOs (need real data):** `sameAs` social URLs (footer links are placeholders), book ISBNs/purchase URLs, `WebSite` SearchAction (needs a real /search route), confirm production domain. `VideoObject`/`AudioObject` deferred to Step 7 / real media. Search Console + GA4 at Step 13.
+
+**⬅️ NEXT ACTION: Step 7 — build the real Single Episode page (`/episodes/[slug]`) + `/series/[slug]`, with `VideoObject` schema.**
 
 ### [ ] Step 7 — Build a real Single Episode page
 - Full page at `/episodes/[slug]`: video embed, transcript/summary, key takeaways, related episodes, share buttons
