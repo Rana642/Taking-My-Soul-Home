@@ -110,7 +110,7 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 - Production `.htaccess` already has SPA fallback (all non-file requests → `/index.html`) — BrowserRouter works on Hostinger out of the box
 - Verified live: every route renders correct h1, active nav-link highlight tracks the current path, back-compat redirects fire, unknown blog slug bounces to listing, `/nonexistent/route` shows the 404 page. Production build: **1716 modules, 0 errors**, 383 KB JS (~107 KB gzip)
 
-### 🔄 Step 5 — Migrate Vite → Next.js (App Router)  ⬅️ CURRENT
+### ✅ Step 5 — Migrate Vite → Next.js (App Router)  — DONE
 **Decision locked:** move off the Vite SPA to Next.js App Router. Reason: the current setup is client-side-only rendered — bad for SEO (Bing/DuckDuckGo don't run JS, social-link previews break, initial HTML has no content). Next.js gives SSR/SSG + a native metadata & schema API, and pairs cleanly with the planned headless WordPress backend. Doing it NOW (before more pages are built) avoids re-doing Step 7's episode page and the WordPress data layer twice.
 - Safety: initialise git + commit the working Vite app first (no VCS existed before this) so the migration is reversible
 - Install Next.js; App Router (`app/` directory), not Pages Router
@@ -122,9 +122,16 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 - Remove Vite (`vite.config.ts`, `@vitejs/plugin-react`, `index.html`, `main.tsx`) once Next builds clean
 - Done when `next build` passes and every route renders server-side (view-source shows real content)
 
-**Progress (git: `ad35fc5` = Vite rollback point, `c84a5fe` = foundation):**
-- ✅ Foundation done + verified: Next 16 installed, `next.config.ts` / `postcss.config.mjs`, Tailwind v4 on postcss, `app/layout.tsx` (metadata API + fonts), `app/globals.css` (theme moved), placeholder `app/page.tsx`. `next build` passes; **SSR confirmed** — raw HTML contains content + `<title>` + meta description.
-- ⏳ Remaining (the bulk): create an `AppShell` client component + context to hold the modal/audio/search state `App.tsx` owns today (layout can't pass props to page children); port all ~20 components (`"use client"` + swap `react-router-dom` → `next/link` / `next/navigation`, prop-callbacks → context hooks); create the file-based route pages; replace the placeholder home with the real `HomePage`; delete Vite files; remove the temporary `ignoreBuildErrors`/`ignoreDuringBuilds` flags in `next.config.ts` and fix any real type errors.
+**Done (git: `ad35fc5` = Vite rollback, `c84a5fe` = foundation, `0ffce47` = migration complete):**
+- `AppShell` client component + `app-shell-context` hold the video/audio/search/donate overlay state (replaces `App.tsx` prop-drilling; layout renders `<AppShell>{children}</AppShell>`)
+- All ~20 components ported: `"use client"` where interactive, `react-router-dom` → `next/link` + `next/navigation`, prop-callbacks → `useAppShell()`
+- File-based routes for every URL incl. `/blog/[slug]`, `/legal/[type]`; `notFound()` for unknown slugs; `next.config` 308 redirects `/privacy`→`/legal/privacy` etc.
+- Fonts via `next/font` (Open Sans, Amiri) + local Higuen `@font-face`
+- Vite deleted (`App.tsx`, `main.tsx`, `ScrollToTop`, `index.html`, `vite.config.ts`); temporary ignore flags removed
+- **Verified:** `next build` passes full TS check, 0 errors; all 11 routes build (9 static, 2 dynamic); SSR confirmed via raw HTML; 0 runtime console errors; Higuen/Open Sans/Amiri all rendering
+- Leftover for cleanup (Step 12): unused npm deps still in package.json (`vite`, `@vitejs/plugin-react`, `@tailwindcss/vite`, `react-router-dom`, `express`, `dotenv`, `@google/genai`)
+
+**⬅️ NEXT ACTION: Step 6 — technical SEO foundation (metadata per route, JSON-LD schema, sitemap, robots).**
 
 ### [ ] Step 6 — Technical SEO foundation (native Next.js)
 Now cheap because Next.js is in place. This is where SEO "lives" — split into technical-now vs content-later (content SEO waits for Step 11, since indexing placeholder content is pointless/harmful).
