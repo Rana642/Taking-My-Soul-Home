@@ -155,13 +155,15 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 
 **⬅️ NEXT ACTION: Step 8 — WordPress backend (WPGraphQL + ACF, custom post types Series/Episode/Resource).**
 
-### 🔄 Step 8 — WordPress backend setup (KIT READY, awaiting install)
-Content model is written as code in **`wordpress/`** (committed): `tmsh-headless.php` mu-plugin registers CPTs (`series`, `episode`, `resource`, `audio_track`) + `series_tag` taxonomy + ACF field groups, all `show_in_graphql`, field names matching `src/types.ts`. `wordpress/README.md` = full Hostinger setup guide.
-- **User to do on Hostinger:** create `cms.` subdomain → install WordPress → install plugins (WPGraphQL, ACF, WPGraphQL-for-ACF) → drop in `tmsh-headless.php` → verify the `/graphql` endpoint.
-- **Access:** user is setting up **Novamira** (novamira.ai — AI↔WordPress bridge) on a staging site. Not connected to this session yet; if/when it's reachable here (CLI/MCP), Claude can apply/verify the kit directly. Otherwise the kit is applied by hand.
-- Blog uses built-in `post` (+ `articleFields` ACF: readTime, isCornerstone).
+### ✅ Step 8 — WordPress backend setup — DONE & LIVE
+Applied and verified end-to-end via the **Novamira MCP** (connected to this session — full WP control: execute-php, WP-CLI, file ops).
+- **WordPress:** fresh Hostinger site `olive-echidna-540346.hostingersite.com` (temp URL; map `cms.takingmysoulhome.com` to it later). WP 7.0.2, PHP 8.3.30, admin `takingmysoulhome@gmail.com`.
+- **Plugins active:** WPGraphQL 2.19.0, ACF 6.8.6, WPGraphQL-for-ACF 2.7.0 (user installed).
+- **Content model applied:** the kit was written to `wp-content/novamira-sandbox/tmsh-headless.php` (crash-safe sandbox; source of truth also in repo `wordpress/`). CPTs `series`/`episode`/`resource`/`audio_track` + `series_tag` taxonomy + 5 ACF groups all registered and `show_in_graphql`.
+- **Verified:** in-process + **external** GraphQL query returns all types with no errors; `episodeFields`/`seriesFields`/`resourceFields`/`audioFields` all resolve. Backend set `blog_public=0` (noindex).
+- **GraphQL endpoint (for Step 9 / Vercel env):** `https://olive-echidna-540346.hostingersite.com/graphql`
 
-**⬅️ NEXT ACTION: user installs the kit on Hostinger WordPress; then Step 9 (connect frontend via GraphQL). Meanwhile Steps 10/11 can proceed in parallel if desired.**
+**⬅️ NEXT ACTION: Step 9 — connect the frontend. WordPress is empty; either (a) seed it with the current mockData via Novamira (gives Step 9 real data + gives Freha an editable structure), then wire the frontend GraphQL queries + ISR; or (b) build the queries now and populate content in Step 11.**
 
 ### [ ] Step 9 — Connect frontend to WordPress via GraphQL
 - Replace all reads from `src/data/mockData.ts` with live GraphQL queries to WordPress
