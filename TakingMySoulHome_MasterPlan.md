@@ -155,12 +155,13 @@ These live in `src/index.css` as a Tailwind v4 `@theme` block — the single sou
 
 **⬅️ NEXT ACTION: Step 8 — WordPress backend (WPGraphQL + ACF, custom post types Series/Episode/Resource).**
 
-### [ ] Step 8 — WordPress backend setup
-- Install WordPress (admin-only, not public-facing)
-- Install and configure WPGraphQL plugin
-- Install Advanced Custom Fields (ACF) + WPGraphQL for ACF
-- Create Custom Post Types: `Series`, `Episode` (linked to Series, with video embed/transcript/order fields), `Resource` (audio, category)
-- Blog uses WordPress's built-in Post type
+### 🔄 Step 8 — WordPress backend setup (KIT READY, awaiting install)
+Content model is written as code in **`wordpress/`** (committed): `tmsh-headless.php` mu-plugin registers CPTs (`series`, `episode`, `resource`, `audio_track`) + `series_tag` taxonomy + ACF field groups, all `show_in_graphql`, field names matching `src/types.ts`. `wordpress/README.md` = full Hostinger setup guide.
+- **User to do on Hostinger:** create `cms.` subdomain → install WordPress → install plugins (WPGraphQL, ACF, WPGraphQL-for-ACF) → drop in `tmsh-headless.php` → verify the `/graphql` endpoint.
+- **Access:** user is setting up **Novamira** (novamira.ai — AI↔WordPress bridge) on a staging site. Not connected to this session yet; if/when it's reachable here (CLI/MCP), Claude can apply/verify the kit directly. Otherwise the kit is applied by hand.
+- Blog uses built-in `post` (+ `articleFields` ACF: readTime, isCornerstone).
+
+**⬅️ NEXT ACTION: user installs the kit on Hostinger WordPress; then Step 9 (connect frontend via GraphQL). Meanwhile Steps 10/11 can proceed in parallel if desired.**
 
 ### [ ] Step 9 — Connect frontend to WordPress via GraphQL
 - Replace all reads from `src/data/mockData.ts` with live GraphQL queries to WordPress
