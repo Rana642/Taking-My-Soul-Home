@@ -8,7 +8,7 @@ import { AudioTrack } from '../types';
 
 const WP_URL =
   process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL ||
-  'https://palevioletred-rhinoceros-598857.hostingersite.com/graphql';
+  'https://cms.takingmysoulhome.com/graphql';
 
 const strip = (s?: string) =>
   (s || '').replace(/<[^>]+>/g, '').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();

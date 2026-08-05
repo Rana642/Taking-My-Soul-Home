@@ -12,7 +12,7 @@ import { SeriesItem, EpisodeItem, BlogPost, AudioTrack, ResourceItem } from '../
 const WP_URL =
   process.env.WORDPRESS_GRAPHQL_URL ||
   process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL ||
-  'https://palevioletred-rhinoceros-598857.hostingersite.com/graphql';
+  'https://cms.takingmysoulhome.com/graphql';
 
 const REVALIDATE = 300; // seconds
 
