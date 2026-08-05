@@ -55,7 +55,8 @@ Vercel → Project → **Settings → Environment Variables** (then Redeploy):
 | Variable | Value (now) | Notes |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://takingmysoulhome.com` | canonical/OG/sitemap base |
-| `WORDPRESS_GRAPHQL_URL` | `https://cms.takingmysoulhome.com/graphql` | set in Step 9 (frontend→WP connect). Until cms is live you can use the temp `https://olive-echidna-540346.hostingersite.com/graphql` |
+| `WORDPRESS_GRAPHQL_URL` | `https://cms.takingmysoulhome.com/graphql` | ✅ set in Vercel; cms subdomain live |
+| `NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL` | `https://cms.takingmysoulhome.com/graphql` | ✅ set (client-side, used by SearchModal) |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | *(leave unset / false)* | **only set to `true` at real launch** |
 
 ---
@@ -70,6 +71,8 @@ Vercel → Project → **Settings → Environment Variables** (then Redeploy):
 ---
 
 ## Quick status
-- Frontend live (preview): `https://taking-my-soul-home.vercel.app` (noindex, auto-deploy)
-- Backend live: `https://olive-echidna-540346.hostingersite.com/graphql` (WordPress, seeded, noindex)
-- **Next work session:** Step 9 — connect the frontend to WordPress via GraphQL (ISR).
+- Domain: **`takingmysoulhome.com` → Vercel** (frontend), **`cms.takingmysoulhome.com` → Hostinger** (WordPress). Both SSL-active. DNS managed at Vercel (nameservers). Hostinger IP for cms A-record: `145.79.24.54`.
+- Frontend live: `https://taking-my-soul-home.vercel.app` + `https://takingmysoulhome.com` (noindex, auto-deploy from `main`)
+- Backend live: `https://cms.takingmysoulhome.com/graphql` (WordPress, seeded, noindex)
+- **Step 9 DONE + verified on production:** the live Vercel site pulls all content (series/episodes/blog/audio/resources) and images from cms via GraphQL, with 5-min ISR. WordPress edits go live automatically.
+- **Next:** Step 10 (wire contact form / newsletter / donations) and/or Step 11 (real content replaces placeholders), then Step 12 cleanup, Step 13 launch (flip `NEXT_PUBLIC_ALLOW_INDEXING=true` + Search Console).
