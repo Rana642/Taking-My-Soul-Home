@@ -169,11 +169,16 @@ Applied and verified end-to-end via the **Novamira MCP** (connected to this sess
 
 **⬅️ NEXT ACTION: Step 9 — build the GraphQL client + typed queries, map WP → frontend types, replace `src/data/mockData.ts` reads with live queries (ISR), set `WORDPRESS_GRAPHQL_URL` in Vercel.**
 
-### [ ] Step 9 — Connect frontend to WordPress via GraphQL
-- Replace all reads from `src/data/mockData.ts` with live GraphQL queries to WordPress
-- Home: latest series/episodes/blog fetched live; detail pages fetch by slug
-- Use Next.js Static Generation / ISR for SEO performance (`generateStaticParams` + revalidate)
-- Make metadata + sitemap DYNAMIC: titles/descriptions/schema pulled from WP (Rank Math or ACF SEO fields), sitemap generated from live slugs
+### ✅ Step 9 — Connect frontend to WordPress via GraphQL — DONE
+- `src/lib/wp.ts`: WPGraphQL client + typed getters/mappers for series/episodes/posts/audio/resources; ISR (`revalidate = 300`); graceful failure (returns empty → page renders, never crashes). Endpoint env-driven: `WORDPRESS_GRAPHQL_URL` (+ `NEXT_PUBLIC_` for the client search). **Hardcoded fallback = the current temp URL** — fragile because Hostinger's temp URL changes; set the env var in Vercel + finish the `cms.` subdomain for stability.
+- Every route page is async and fetches from WP, passing data as props; list + detail components now take props (no more mockData imports). `generateStaticParams` for `/blog/[slug]`, `/episodes/[slug]`, `/series/[slug]` pulls slugs from WP → SSG + ISR.
+- `types.ts`: added `slug` to Series/Episode; `BlogPost.content` is now an HTML string (rendered via `dangerouslySetInnerHTML`). `content.ts` trimmed to slug accessors + `durationToISO`/`youtubeEmbedUrl`. `mockData.ts` trimmed to `DAILY_VERSES`/`MERCH_ITEMS`/`TEAM_INFO` (no WP model yet — hero verses, merch, team block).
+- `SearchModal` fetches a live index client-side on open. `sitemap.ts` is async from WP.
+- **WP fix applied via Novamira:** ACF `file` fields (audioUrl/downloadUrl/audioDownloadUrl) → `url` type so external placeholder URLs pass through as scalars; needed a fresh-filename reload (`tmsh-model-v2.php`) to bust LiteSpeed opcache (Novamira's PHP process has a separate opcache from the web workers — key gotcha). Two dead Unsplash episode thumbnails re-sideloaded.
+- WordPress temp URL changed once already (`olive-echidna-540346` → `palevioletred-rhinoceros-598857`) — **the `cms.` subdomain is now important for a stable endpoint.**
+- **Verified:** `next build` = 27 pages; home/series/episode/blog all render live WP content + WP-hosted images + video embeds + transcripts; search live. Metadata/JSON-LD already dynamic from Step 6 (now fed by WP data).
+
+**⬅️ NEXT ACTION: set `WORDPRESS_GRAPHQL_URL` in Vercel + verify the deployed site; then Step 10 (functional backends) or Step 11 (real content). Rank Math SEO fields from WP can be wired later.**
 
 ### [ ] Step 10 — Wire up functional backends
 - Contact form → real email/API endpoint (currently just shows a toast)
