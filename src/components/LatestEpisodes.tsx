@@ -1,12 +1,9 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { Play, Clock, ArrowRight } from 'lucide-react';
-import { LATEST_EPISODES } from '../data/mockData';
-import { episodeSlug } from '../lib/content';
+import { EpisodeItem } from '../types';
 
-export const LatestEpisodes: React.FC = () => {
+export const LatestEpisodes: React.FC<{ episodes: EpisodeItem[] }> = ({ episodes }) => {
   return (
     <section className="py-14 bg-brand-cream text-ink">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,10 +30,10 @@ export const LatestEpisodes: React.FC = () => {
 
         {/* Episode Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-          {LATEST_EPISODES.map((ep) => (
+          {episodes.map((ep) => (
             <Link
               key={ep.id}
-              href={`/episodes/${episodeSlug(ep)}`}
+              href={`/episodes/${ep.slug}`}
               className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-brand-cream flex flex-col justify-between"
             >
               {/* Thumbnail Container */}

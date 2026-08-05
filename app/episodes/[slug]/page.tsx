@@ -4,38 +4,35 @@ import { EpisodeDetailView } from '@/src/components/EpisodeDetailView';
 import { JsonLd } from '@/src/lib/JsonLd';
 import { videoObjectSchema, breadcrumbSchema } from '@/src/lib/schema';
 import { pageMetadata } from '@/src/lib/site';
-import {
-  getAllEpisodes, getAllSeries, getEpisodeBySlug,
-  getRelatedEpisodes, seriesSlug, episodeSlug,
-} from '@/src/lib/content';
+import { getAllEpisodes, getEpisodeBySlug, getRelatedEpisodes } from '@/src/lib/wp';
 
-export function generateStaticParams() {
-  return getAllEpisodes().map((ep) => ({ slug: episodeSlug(ep) }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const eps = await getAllEpisodes();
+  return eps.map((ep) => ({ slug: ep.slug }));
 }
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const ep = getEpisodeBySlug(slug);
+  const ep = await getEpisodeBySlug(slug);
   if (!ep) return {};
   return pageMetadata({
     title: ep.title,
     description: ep.excerpt,
-    path: `/episodes/${episodeSlug(ep)}`,
+    path: `/episodes/${ep.slug}`,
     image: ep.thumbnail,
   });
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const episode = getEpisodeBySlug(slug);
+  const [episode, all] = await Promise.all([getEpisodeBySlug(slug), getAllEpisodes()]);
   if (!episode) notFound();
 
-  const related = getRelatedEpisodes(episode);
-  // Resolve the parent series' slug for the "series" link.
-  const parentSeries = getAllSeries().find((s) => s.id === episode.seriesId);
-  const parentSlug = parentSeries ? seriesSlug(parentSeries) : '';
+  const related = getRelatedEpisodes(episode, all);
 
   return (
     <>
@@ -45,11 +42,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           breadcrumbSchema([
             { name: 'Home', path: '/' },
             { name: 'Episodes', path: '/episodes' },
-            { name: episode.title, path: `/episodes/${episodeSlug(episode)}` },
+            { name: episode.title, path: `/episodes/${episode.slug}` },
           ]),
         ]}
       />
-      <EpisodeDetailView episode={episode} related={related} seriesSlug={parentSlug} />
+      <EpisodeDetailView episode={episode} related={related} seriesSlug={episode.seriesSlug} />
     </>
   );
 }

@@ -11,6 +11,7 @@ export interface DailyVerse {
 
 export interface SeriesItem {
   id: string;
+  slug: string;
   title: string;
   tagline: string;
   description: string;
@@ -22,7 +23,9 @@ export interface SeriesItem {
 
 export interface EpisodeItem {
   id: string;
+  slug: string;
   seriesId: string;
+  seriesSlug: string;
   seriesTitle: string;
   title: string;
   excerpt: string;
@@ -52,7 +55,7 @@ export interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  category: 'Tafseer' | 'Stories' | 'Reminders' | 'Quran Reflections' | 'Spiritual Growth' | 'Wazaif';
+  category: string;
   tag: string;
   author: {
     name: string;
@@ -62,7 +65,8 @@ export interface BlogPost {
   date: string;
   readTime: string;
   excerpt: string;
-  content: string[];
+  /** Rendered HTML from WordPress (was string[] of paragraphs under mockData). */
+  content: string;
   featuredImage: string;
   tags: string[];
   isCornerstone?: boolean;

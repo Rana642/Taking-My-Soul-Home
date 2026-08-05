@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/src/lib/site';
-import { BLOG_POSTS } from '@/src/data/mockData';
-import { getAllEpisodes, getAllSeries, episodeSlug, seriesSlug } from '@/src/lib/content';
+import { getAllSeries, getAllEpisodes, getAllPosts } from '@/src/lib/wp';
 
-// Static list for now; becomes WordPress/GraphQL-driven in Step 9.
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 300;
+
+// Series / episode / blog URLs are pulled live from WordPress.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPaths = [
@@ -20,32 +21,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === '' ? 1 : 0.7,
   }));
 
-  const blogEntries: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => {
-    const d = new Date(post.date);
-    return {
-      url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: isNaN(d.getTime()) ? now : d,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    };
-  });
+  const [series, episodes, posts] = await Promise.all([
+    getAllSeries(),
+    getAllEpisodes(),
+    getAllPosts(),
+  ]);
 
-  const seriesEntries: MetadataRoute.Sitemap = getAllSeries().map((s) => ({
-    url: `${SITE_URL}/series/${seriesSlug(s)}`,
+  const seriesEntries: MetadataRoute.Sitemap = series.map((s) => ({
+    url: `${SITE_URL}/series/${s.slug}`,
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
 
-  const episodeEntries: MetadataRoute.Sitemap = getAllEpisodes().map((ep) => {
-    const d = new Date(ep.date);
-    return {
-      url: `${SITE_URL}/episodes/${episodeSlug(ep)}`,
-      lastModified: isNaN(d.getTime()) ? now : d,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    };
-  });
+  const dateOr = (v: string) => {
+    const d = new Date(v);
+    return isNaN(d.getTime()) ? now : d;
+  };
+
+  const episodeEntries: MetadataRoute.Sitemap = episodes.map((ep) => ({
+    url: `${SITE_URL}/episodes/${ep.slug}`,
+    lastModified: dateOr(ep.date),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: dateOr(post.date),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
 
   return [...staticEntries, ...seriesEntries, ...episodeEntries, ...blogEntries];
 }

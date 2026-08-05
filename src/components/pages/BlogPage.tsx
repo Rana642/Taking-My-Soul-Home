@@ -2,30 +2,16 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { ArrowRight, Clock, Search, Filter } from 'lucide-react';
-import { BLOG_POSTS } from '../../data/mockData';
-import { BlogPostDetailView } from '../BlogPostDetailView';
+import { BlogPost } from '../../types';
 
-interface BlogPageProps {
-  /** Present on /blog/[slug] → renders the single-post view. */
-  slug?: string;
-}
-
-export const BlogPage: React.FC<BlogPageProps> = ({ slug }) => {
+export const BlogPage: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // If a slug is present in the URL, render the single-post view (or 404).
-  if (slug) {
-    const post = BLOG_POSTS.find((p) => p.slug === slug);
-    if (!post) notFound();
-    return <BlogPostDetailView post={post!} />;
-  }
+  const categories = ['ALL', ...Array.from(new Set(posts.map((p) => p.category).filter(Boolean)))];
 
-  const categories = ['ALL', 'Spiritual Growth', 'Stories', 'Reminders', 'Quran Reflections', 'Wazaif'];
-
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     const matchesCat = activeCategory === 'ALL' || post.category === activeCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());

@@ -1,58 +1,100 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Film, BookOpen, Volume2, ArrowRight } from 'lucide-react';
-import { FEATURED_SERIES, LATEST_EPISODES, BLOG_POSTS, AUDIO_TRACKS } from '../data/mockData';
 import { useAppShell } from './app-shell-context';
-import { episodeSlug, seriesSlug } from '../lib/content';
+import { AudioTrack } from '../types';
+
+const WP_URL =
+  process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL ||
+  'https://palevioletred-rhinoceros-598857.hostingersite.com/graphql';
+
+const strip = (s?: string) =>
+  (s || '').replace(/<[^>]+>/g, '').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+
+interface SeriesHit { slug: string; title: string; tagline: string; }
+interface EpisodeHit { slug: string; title: string; excerpt: string; seriesTitle: string; duration: string; }
+interface PostHit { slug: string; title: string; excerpt: string; category: string; readTime: string; }
+interface SearchData { series: SeriesHit[]; episodes: EpisodeHit[]; posts: PostHit[]; audio: AudioTrack[]; }
+
+const EMPTY: SearchData = { series: [], episodes: [], posts: [], audio: [] };
+
+const SEARCH_QUERY = `{
+  allSeries(first: 50) { nodes { slug title seriesFields { tagline } } }
+  episodes(first: 100) { nodes { slug title excerpt episodeFields { duration series { nodes { ... on Series { title } } } } } }
+  posts(first: 100) { nodes { slug title excerpt categories { nodes { name } } articleFields { readTime } } }
+  audioTracks(first: 50) { nodes { databaseId title audioFields { author audioCategory duration audioUrl description } featuredImage { node { sourceUrl } } } }
+}`;
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const SearchModal: React.FC<SearchModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const { playAudioTrack } = useAppShell();
   const [query, setQuery] = useState('');
+  const [data, setData] = useState<SearchData>(EMPTY);
+  const [loaded, setLoaded] = useState(false);
+
+  // Fetch the search index the first time the modal opens.
+  useEffect(() => {
+    if (!isOpen || loaded) return;
+    (async () => {
+      try {
+        const res = await fetch(WP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: SEARCH_QUERY }),
+        });
+        const j = await res.json();
+        const d = j?.data || {};
+        setData({
+          series: (d.allSeries?.nodes || []).map((n: any) => ({
+            slug: n.slug, title: strip(n.title), tagline: n.seriesFields?.tagline || '',
+          })),
+          episodes: (d.episodes?.nodes || []).map((n: any) => ({
+            slug: n.slug, title: strip(n.title), excerpt: strip(n.excerpt),
+            seriesTitle: strip(n.episodeFields?.series?.nodes?.[0]?.title),
+            duration: n.episodeFields?.duration || '',
+          })),
+          posts: (d.posts?.nodes || []).map((n: any) => ({
+            slug: n.slug, title: strip(n.title), excerpt: strip(n.excerpt),
+            category: n.categories?.nodes?.[0]?.name || '',
+            readTime: n.articleFields?.readTime || '',
+          })),
+          audio: (d.audioTracks?.nodes || []).map((n: any): AudioTrack => ({
+            id: String(n.databaseId), title: strip(n.title), author: n.audioFields?.author || '',
+            category: (Array.isArray(n.audioFields?.audioCategory) ? n.audioFields.audioCategory[0] : 'Recitation') as AudioTrack['category'],
+            duration: n.audioFields?.duration || '', audioUrl: n.audioFields?.audioUrl || '',
+            description: strip(n.audioFields?.description), coverImage: n.featuredImage?.node?.sourceUrl || '',
+          })),
+        });
+        setLoaded(true);
+      } catch {
+        /* leave results empty on failure */
+      }
+    })();
+  }, [isOpen, loaded]);
 
   if (!isOpen) return null;
 
-  const filteredSeries = FEATURED_SERIES.filter((s) =>
-    s.title.toLowerCase().includes(query.toLowerCase()) ||
-    s.description.toLowerCase().includes(query.toLowerCase())
-  );
+  const q = query.toLowerCase();
+  const filteredSeries = q ? data.series.filter((s) => s.title.toLowerCase().includes(q) || s.tagline.toLowerCase().includes(q)) : [];
+  const filteredEpisodes = q ? data.episodes.filter((e) => e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)) : [];
+  const filteredPosts = q ? data.posts.filter((p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q)) : [];
+  const filteredAudio = q ? data.audio.filter((a) => a.title.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)) : [];
 
-  const filteredEpisodes = LATEST_EPISODES.filter((e) =>
-    e.title.toLowerCase().includes(query.toLowerCase()) ||
-    e.excerpt.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const filteredPosts = BLOG_POSTS.filter((p) =>
-    p.title.toLowerCase().includes(query.toLowerCase()) ||
-    p.excerpt.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const filteredAudio = AUDIO_TRACKS.filter((a) =>
-    a.title.toLowerCase().includes(query.toLowerCase()) ||
-    a.description.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const hasResults = query.trim() !== '' && (
-    filteredSeries.length > 0 ||
-    filteredEpisodes.length > 0 ||
-    filteredPosts.length > 0 ||
-    filteredAudio.length > 0
-  );
+  const hasResults =
+    query.trim() !== '' &&
+    (filteredSeries.length > 0 || filteredEpisodes.length > 0 || filteredPosts.length > 0 || filteredAudio.length > 0);
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center p-4 pt-16 sm:pt-24 animate-fadeIn">
       <div className="relative w-full max-w-3xl bg-brand-teal-dark text-white rounded-2xl border border-brand-gold/40 shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
-        
+
         {/* Search Header Input */}
         <div className="p-4 sm:p-5 border-b border-brand-teal flex items-center space-x-3 bg-brand-teal-dark">
           <Search className="w-5 h-5 text-brand-gold shrink-0" />
@@ -65,17 +107,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             className="w-full bg-transparent text-white placeholder-stone-400 text-base focus:outline-none"
           />
           {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="text-stone-400 hover:text-white text-xs"
-            >
+            <button onClick={() => setQuery('')} className="text-stone-400 hover:text-white text-xs">
               Clear
             </button>
           )}
-          <button
-            onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-white rounded-lg"
-          >
+          <button onClick={onClose} className="p-1.5 text-stone-400 hover:text-white rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -114,11 +150,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {filteredSeries.map((s) => (
                   <div
-                    key={s.id}
-                    onClick={() => {
-                      router.push(`/series/${seriesSlug(s)}`);
-                      onClose();
-                    }}
+                    key={s.slug}
+                    onClick={() => { router.push(`/series/${s.slug}`); onClose(); }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
                   >
                     <Film className="w-5 h-5 text-brand-gold shrink-0" />
@@ -141,11 +174,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <div className="space-y-2">
                 {filteredEpisodes.map((e) => (
                   <div
-                    key={e.id}
-                    onClick={() => {
-                      router.push(`/episodes/${episodeSlug(e)}`);
-                      onClose();
-                    }}
+                    key={e.slug}
+                    onClick={() => { router.push(`/episodes/${e.slug}`); onClose(); }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center justify-between transition-colors border border-brand-teal"
                   >
                     <div>
@@ -168,11 +198,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <div className="space-y-2">
                 {filteredPosts.map((p) => (
                   <div
-                    key={p.id}
-                    onClick={() => {
-                      router.push(`/blog/${p.slug}`);
-                      onClose();
-                    }}
+                    key={p.slug}
+                    onClick={() => { router.push(`/blog/${p.slug}`); onClose(); }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
                   >
                     <BookOpen className="w-5 h-5 text-brand-gold shrink-0" />
@@ -196,10 +223,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 {filteredAudio.map((a) => (
                   <div
                     key={a.id}
-                    onClick={() => {
-                      playAudioTrack(a);
-                      onClose();
-                    }}
+                    onClick={() => { playAudioTrack(a); onClose(); }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
                   >
                     <Volume2 className="w-5 h-5 text-brand-gold shrink-0" />
@@ -214,7 +238,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           )}
 
         </div>
-
       </div>
     </div>
   );

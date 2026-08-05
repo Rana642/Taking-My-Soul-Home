@@ -8,20 +8,28 @@ import { SupportAndCommunity } from '../SupportAndCommunity';
 import { BlogSection } from '../BlogSection';
 import { PrayerTimesWidget } from '../PrayerTimesWidget';
 import { DailyReflectionToast } from '../DailyReflectionToast';
+import { SeriesItem, EpisodeItem, BlogPost, AudioTrack } from '../../types';
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  series: SeriesItem[];
+  episodes: EpisodeItem[];
+  posts: BlogPost[];
+  tracks: AudioTrack[];
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ series, episodes, posts, tracks }) => {
   return (
     <main className="animate-fadeIn">
       <HeroDailyVerse />
       <FeatureBadges />
-      <FeaturedSeries />
-      <LatestEpisodes />
+      <FeaturedSeries series={series} />
+      <LatestEpisodes episodes={episodes} />
 
       <section className="py-14 bg-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-7">
-              <ListenAndReflect />
+              <ListenAndReflect tracks={tracks} />
             </div>
             <div className="lg:col-span-5">
               <MeetFreha />
@@ -31,7 +39,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       <SupportAndCommunity />
-      <BlogSection />
+      <BlogSection posts={posts} />
       <PrayerTimesWidget />
       <DailyReflectionToast />
     </main>

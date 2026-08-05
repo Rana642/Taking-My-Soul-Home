@@ -1,10 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { FEATURED_SERIES } from '../data/mockData';
-import { seriesSlug } from '../lib/content';
+import { SeriesItem } from '../types';
 
-export const FeaturedSeries: React.FC = () => {
+export const FeaturedSeries: React.FC<{ series: SeriesItem[] }> = ({ series }) => {
   return (
     <section className="py-16 bg-brand-cream text-ink">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,10 +29,10 @@ export const FeaturedSeries: React.FC = () => {
 
         {/* Series Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
-          {FEATURED_SERIES.map((item) => (
+          {series.map((item) => (
             <Link
               key={item.id}
-              href={`/series/${seriesSlug(item)}`}
+              href={`/series/${item.slug}`}
               className="group relative bg-brand-teal-dark rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer border border-brand-teal/40 hover:-translate-y-1"
             >
               {/* Image Banner */}

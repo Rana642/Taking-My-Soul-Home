@@ -1,20 +1,23 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { BlogPage } from '@/src/components/pages/BlogPage';
+import { BlogPostDetailView } from '@/src/components/BlogPostDetailView';
 import { JsonLd } from '@/src/lib/JsonLd';
 import { blogPostingSchema, breadcrumbSchema } from '@/src/lib/schema';
 import { pageMetadata } from '@/src/lib/site';
-import { BLOG_POSTS } from '@/src/data/mockData';
+import { getAllPosts, getPostBySlug } from '@/src/lib/wp';
 
-export function generateStaticParams() {
-  return BLOG_POSTS.map((p) => ({ slug: p.slug }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
   return pageMetadata({
     title: post.title,
@@ -26,8 +29,11 @@ export async function generateMetadata(
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const [post, allPosts] = await Promise.all([getPostBySlug(slug), getAllPosts()]);
   if (!post) notFound();
+
+  const related = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
+
   return (
     <>
       <JsonLd
@@ -40,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           ]),
         ]}
       />
-      <BlogPage slug={slug} />
+      <BlogPostDetailView post={post} related={related} />
     </>
   );
 }

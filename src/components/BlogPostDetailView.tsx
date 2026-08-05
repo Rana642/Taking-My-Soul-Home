@@ -4,14 +4,15 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Calendar, User, Share2, Bookmark, Check, ThumbsUp, MessageSquare, Type } from 'lucide-react';
 import { BlogPost } from '../types';
-import { BLOG_POSTS } from '../data/mockData';
 
 interface BlogPostDetailViewProps {
   post: BlogPost;
+  related: BlogPost[];
 }
 
 export const BlogPostDetailView: React.FC<BlogPostDetailViewProps> = ({
   post,
+  related,
 }) => {
   // USER REQUESTED THREE BLOG FONT-INCREASING FUNCTIONS:
   // 1 = Small (15px / text-sm), 2 = Medium (18px / text-lg), 3 = Large (22px / text-xl)
@@ -61,7 +62,7 @@ export const BlogPostDetailView: React.FC<BlogPostDetailViewProps> = ({
     setNewComment('');
   };
 
-  const relatedPosts = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
+  const relatedPosts = related;
 
   return (
     <article className="py-10 bg-brand-cream text-ink min-h-screen">
@@ -172,11 +173,10 @@ export const BlogPostDetailView: React.FC<BlogPostDetailViewProps> = ({
 
         {/* Main Article Body with Dynamic Font Size */}
         <div className={`space-y-6 text-stone-800 ${getFontSizeClass()} transition-all duration-200`}>
-          {post.content.map((paragraph, idx) => (
-            <p key={idx} className="font-sans">
-              {paragraph}
-            </p>
-          ))}
+          <div
+            className="font-sans space-y-4 [&_p]:leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
 
           {/* Highlight Quote Box */}
           <blockquote className="my-8 p-6 rounded-2xl bg-brand-cream border-l-4 border-brand-gold shadow-sm">

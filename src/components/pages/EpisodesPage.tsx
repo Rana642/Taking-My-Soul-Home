@@ -3,13 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Play, Search, Calendar } from 'lucide-react';
-import { LATEST_EPISODES } from '../../data/mockData';
-import { episodeSlug } from '../../lib/content';
+import { EpisodeItem } from '../../types';
 
-export const EpisodesPage: React.FC = () => {
+export const EpisodesPage: React.FC<{ episodes: EpisodeItem[] }> = ({ episodes }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredEpisodes = LATEST_EPISODES.filter((ep) =>
+  const filteredEpisodes = episodes.filter((ep) =>
     ep.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ep.seriesTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -49,7 +48,7 @@ export const EpisodesPage: React.FC = () => {
           {filteredEpisodes.map((ep) => (
             <Link
               key={ep.id}
-              href={`/episodes/${episodeSlug(ep)}`}
+              href={`/episodes/${ep.slug}`}
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between group"
             >
               <div className="relative aspect-video bg-stone-900">

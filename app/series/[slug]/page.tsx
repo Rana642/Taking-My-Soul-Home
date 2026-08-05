@@ -4,34 +4,35 @@ import { SeriesDetailView } from '@/src/components/SeriesDetailView';
 import { JsonLd } from '@/src/lib/JsonLd';
 import { breadcrumbSchema } from '@/src/lib/schema';
 import { pageMetadata } from '@/src/lib/site';
-import {
-  getAllSeries, getSeriesBySlug, getEpisodesForSeries, seriesSlug,
-} from '@/src/lib/content';
+import { getAllSeries, getSeriesBySlug, getEpisodesForSeries } from '@/src/lib/wp';
 
-export function generateStaticParams() {
-  return getAllSeries().map((s) => ({ slug: seriesSlug(s) }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const series = await getAllSeries();
+  return series.map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const series = getSeriesBySlug(slug);
+  const series = await getSeriesBySlug(slug);
   if (!series) return {};
   return pageMetadata({
     title: series.title,
     description: series.description,
-    path: `/series/${seriesSlug(series)}`,
+    path: `/series/${series.slug}`,
     image: series.thumbnail,
   });
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const series = getSeriesBySlug(slug);
+  const series = await getSeriesBySlug(slug);
   if (!series) notFound();
 
-  const episodes = getEpisodesForSeries(series.id);
+  const episodes = await getEpisodesForSeries(series.slug);
 
   return (
     <>
@@ -39,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         data={breadcrumbSchema([
           { name: 'Home', path: '/' },
           { name: 'Series', path: '/series' },
-          { name: series.title, path: `/series/${seriesSlug(series)}` },
+          { name: series.title, path: `/series/${series.slug}` },
         ])}
       />
       <SeriesDetailView series={series} episodes={episodes} />

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { SeriesPage } from '@/src/components/pages/SeriesPage';
 import { pageMetadata } from '@/src/lib/site';
+import { getAllSeries } from '@/src/lib/wp';
+
+export const revalidate = 300;
 
 export const metadata: Metadata = pageMetadata({
   title: 'Video Series',
@@ -9,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
   path: '/series',
 });
 
-export default function Page() {
-  return <SeriesPage />;
+export default async function Page() {
+  const series = await getAllSeries();
+  return <SeriesPage series={series} />;
 }

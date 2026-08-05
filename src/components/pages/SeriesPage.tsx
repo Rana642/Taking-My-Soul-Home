@@ -3,17 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Filter } from 'lucide-react';
-import { FEATURED_SERIES } from '../../data/mockData';
-import { seriesSlug } from '../../lib/content';
+import { SeriesItem } from '../../types';
 
-export const SeriesPage: React.FC = () => {
+export const SeriesPage: React.FC<{ series: SeriesItem[] }> = ({ series: allSeries }) => {
   const [activeTag, setActiveTag] = useState<string>('ALL');
 
   const tags = ['ALL', 'NAMES OF ALLAH', 'HEART REFLECTIONS', 'PROPHETIC TALES', 'WEEKLY WISDOM', 'SPIRITUAL WARFARE'];
 
   const filteredSeries = activeTag === 'ALL'
-    ? FEATURED_SERIES
-    : FEATURED_SERIES.filter((s) => s.tag === activeTag);
+    ? allSeries
+    : allSeries.filter((s) => s.tag === activeTag);
 
   return (
     <div className="py-12 bg-brand-cream text-ink min-h-screen">
@@ -58,7 +57,7 @@ export const SeriesPage: React.FC = () => {
           {filteredSeries.map((series) => (
             <Link
               key={series.id}
-              href={`/series/${seriesSlug(series)}`}
+              href={`/series/${series.slug}`}
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-brand-cream flex flex-col justify-between group"
             >
               <div className="relative h-56 overflow-hidden">

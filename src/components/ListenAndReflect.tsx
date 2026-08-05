@@ -3,11 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { Play, Pause, Download, Share2, Volume2, ArrowRight } from 'lucide-react';
-import { AUDIO_TRACKS } from '../data/mockData';
 import { AudioTrack } from '../types';
 import { useAppShell } from './app-shell-context';
 
-export const ListenAndReflect: React.FC = () => {
+export const ListenAndReflect: React.FC<{ tracks: AudioTrack[] }> = ({ tracks }) => {
   const {
     currentAudioTrack: currentTrack,
     isPlayingAudio: isPlaying,
@@ -59,7 +58,7 @@ export const ListenAndReflect: React.FC = () => {
 
         {/* Audio Tracks List */}
         <div className="space-y-3">
-          {AUDIO_TRACKS.map((track) => {
+          {tracks.map((track) => {
             const isThisPlaying = currentTrack?.id === track.id && isPlaying;
             
             return (

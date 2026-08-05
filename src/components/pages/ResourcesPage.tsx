@@ -2,10 +2,15 @@
 
 import React from 'react';
 import { Download, FileText, Volume2, BookOpen, CheckCircle } from 'lucide-react';
-import { RESOURCES, AUDIO_TRACKS } from '../../data/mockData';
+import { ResourceItem, AudioTrack } from '../../types';
 import { useAppShell } from '../app-shell-context';
 
-export const ResourcesPage: React.FC = () => {
+interface ResourcesPageProps {
+  resources: ResourceItem[];
+  tracks: AudioTrack[];
+}
+
+export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks }) => {
   const { playAudioTrack: onPlayTrack } = useAppShell();
   const handleDownload = (itemTitle: string) => {
     alert(`Downloading "${itemTitle}"... Thank you for exploring Taking My Soul Home resources!`);
@@ -38,7 +43,7 @@ export const ResourcesPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {RESOURCES.map((res) => (
+            {resources.map((res) => (
               <div
                 key={res.id}
                 className="bg-white rounded-2xl p-6 border border-brand-cream shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
@@ -83,7 +88,7 @@ export const ResourcesPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {AUDIO_TRACKS.map((track) => (
+            {tracks.map((track) => (
               <div
                 key={track.id}
                 className="bg-white rounded-2xl p-5 border border-brand-cream shadow-sm flex items-center justify-between"

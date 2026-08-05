@@ -160,7 +160,7 @@ add_action('acf/init', function () {
                     ['key' => 'f_ep_takeaway', 'label' => 'Point', 'name' => 'point', 'type' => 'text', 'show_in_graphql' => 1],
                 ],
             ],
-            ['key' => 'f_ep_audio',      'label' => 'Audio Download',  'name' => 'audioDownloadUrl','type' => 'file', 'return_format' => 'url', 'show_in_graphql' => 1],
+            ['key' => 'f_ep_audio',      'label' => 'Audio Download',  'name' => 'audioDownloadUrl','type' => 'url', 'show_in_graphql' => 1],
             // title, excerpt (post excerpt), thumbnail (featured image), date (post date) come from core
         ],
     ]);
@@ -178,7 +178,7 @@ add_action('acf/init', function () {
             ['key' => 'f_res_category', 'label' => 'Category',   'name' => 'category',    'type' => 'text', 'show_in_graphql' => 1],
             ['key' => 'f_res_size',     'label' => 'File Size',  'name' => 'fileSize',    'type' => 'text', 'show_in_graphql' => 1],
             ['key' => 'f_res_desc',     'label' => 'Description','name' => 'description',  'type' => 'textarea', 'show_in_graphql' => 1],
-            ['key' => 'f_res_file',     'label' => 'Download',   'name' => 'downloadUrl',  'type' => 'file', 'return_format' => 'url', 'show_in_graphql' => 1],
+            ['key' => 'f_res_file',     'label' => 'Download',   'name' => 'downloadUrl',  'type' => 'url', 'show_in_graphql' => 1],
             // coverImage => featured image
         ],
     ]);
@@ -195,7 +195,7 @@ add_action('acf/init', function () {
             ['key' => 'f_au_category', 'label' => 'Category', 'name' => 'audioCategory', 'type' => 'select', 'show_in_graphql' => 1,
                 'choices' => ['Darood' => 'Darood', 'Wazifa' => 'Wazifa', 'Kalam' => 'Kalam', 'Recitation' => 'Recitation']],
             ['key' => 'f_au_duration', 'label' => 'Duration (m:ss)', 'name' => 'duration',   'type' => 'text', 'show_in_graphql' => 1],
-            ['key' => 'f_au_url',      'label' => 'Audio File',      'name' => 'audioUrl',   'type' => 'file', 'return_format' => 'url', 'show_in_graphql' => 1],
+            ['key' => 'f_au_url',      'label' => 'Audio File',      'name' => 'audioUrl',   'type' => 'url', 'show_in_graphql' => 1],
             ['key' => 'f_au_desc',     'label' => 'Description',     'name' => 'description', 'type' => 'textarea', 'show_in_graphql' => 1],
             // coverImage => featured image
         ],
