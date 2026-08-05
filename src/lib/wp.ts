@@ -1,4 +1,5 @@
 import { SeriesItem, EpisodeItem, BlogPost, AudioTrack, ResourceItem } from '../types';
+import { extractYouTubeId } from './content';
 
 /**
  * Headless WordPress data layer. Reads content from WPGraphQL and maps it into
@@ -114,7 +115,7 @@ function mapEpisode(n: any): EpisodeItem {
     excerpt: clean(n.excerpt),
     duration: n.episodeFields?.duration || '',
     thumbnail: imgUrl(n),
-    youtubeEmbedId: n.episodeFields?.youtubeEmbedId || '',
+    youtubeEmbedId: extractYouTubeId(n.episodeFields?.youtubeEmbedId),
     date: fmtDate(n.date),
     views: n.episodeFields?.views || '',
     transcript: n.episodeFields?.transcript || '',

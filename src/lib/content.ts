@@ -20,4 +20,24 @@ export function durationToISO(duration?: string): string | undefined {
   return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}` || 'PT0S';
 }
 
-export const youtubeEmbedUrl = (id: string) => `https://www.youtube.com/embed/${id}`;
+/**
+ * Pull the 11-char YouTube video id out of whatever an editor pastes into the
+ * field — a full watch URL, a youtu.be/shorts/live link, an `<iframe>` embed
+ * snippet, an embed URL, or a bare id. Returns '' if nothing usable is found.
+ */
+export function extractYouTubeId(raw?: string): string {
+  if (!raw) return '';
+  const s = String(raw).trim();
+  const m = s.match(
+    /(?:youtube\.com\/(?:embed\/|shorts\/|live\/|watch\?(?:[^"&]*&)*v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
+  );
+  if (m) return m[1];
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s; // already a bare id
+  return '';
+}
+
+/** Robust: accepts a raw id OR any YouTube URL/embed and returns a clean embed URL. */
+export const youtubeEmbedUrl = (raw: string) => {
+  const id = extractYouTubeId(raw);
+  return id ? `https://www.youtube.com/embed/${id}` : '';
+};
