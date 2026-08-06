@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Film, BookOpen, Volume2, ArrowRight } from 'lucide-react';
-import { useAppShell } from './app-shell-context';
 import { AudioTrack } from '../types';
 
 const WP_URL =
@@ -34,7 +33,6 @@ interface SearchModalProps {
 
 export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const { playAudioTrack } = useAppShell();
   const [query, setQuery] = useState('');
   const [data, setData] = useState<SearchData>(EMPTY);
   const [loaded, setLoaded] = useState(false);
@@ -223,7 +221,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                 {filteredAudio.map((a) => (
                   <div
                     key={a.id}
-                    onClick={() => { playAudioTrack(a); onClose(); }}
+                    onClick={() => { router.push('/resources'); onClose(); }}
                     className="p-3 rounded-xl bg-brand-teal-dark hover:bg-brand-teal cursor-pointer flex items-center space-x-3 transition-colors border border-brand-teal"
                   >
                     <Volume2 className="w-5 h-5 text-brand-gold shrink-0" />

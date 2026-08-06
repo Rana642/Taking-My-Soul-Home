@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Download, FileText, Volume2, BookOpen, CheckCircle } from 'lucide-react';
+import { Download, FileText, Volume2, BookOpen } from 'lucide-react';
 import { ResourceItem, AudioTrack } from '../../types';
-import { useAppShell } from '../app-shell-context';
+import { soundcloudEmbedSrc } from '../../lib/content';
 
 interface ResourcesPageProps {
   resources: ResourceItem[];
@@ -11,15 +11,10 @@ interface ResourcesPageProps {
 }
 
 export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks }) => {
-  const { playAudioTrack: onPlayTrack } = useAppShell();
-  const handleDownload = (itemTitle: string) => {
-    alert(`Downloading "${itemTitle}"... Thank you for exploring Taking My Soul Home resources!`);
-  };
-
   return (
     <div className="py-12 bg-brand-cream text-ink min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
+
         {/* Banner */}
         <div className="bg-brand-teal-dark text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-brand-teal">
           <span className="text-xs font-bold text-brand-gold uppercase tracking-widest">
@@ -52,9 +47,9 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks 
                   <div className="w-12 h-12 rounded-xl bg-brand-cream text-brand-teal-dark flex items-center justify-center border border-brand-cream">
                     <FileText className="w-6 h-6" />
                   </div>
-                  
+
                   <span className="text-[11px] font-bold text-brand-teal-dark uppercase tracking-wider block">
-                    {res.category} • {res.size}
+                    {res.category}{res.size ? ` • ${res.size}` : ''}
                   </span>
 
                   <h3 className="font-serif-heading text-lg font-bold text-brand-teal-dark">
@@ -66,13 +61,23 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks 
                   </p>
                 </div>
 
-                <button
-                  onClick={() => handleDownload(res.title)}
-                  className="mt-6 w-full py-2.5 rounded-xl bg-brand-teal-dark text-brand-gold hover:bg-brand-teal text-xs font-bold transition-colors flex items-center justify-center space-x-2"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download Free PDF</span>
-                </button>
+                {res.downloadUrl ? (
+                  <a
+                    href={res.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    className="mt-6 w-full py-2.5 rounded-xl bg-brand-teal-dark text-brand-gold hover:bg-brand-teal text-xs font-bold transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Free {res.type === 'audio' ? 'File' : 'PDF'}</span>
+                  </a>
+                ) : (
+                  <span className="mt-6 w-full py-2.5 rounded-xl bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center space-x-2 cursor-not-allowed">
+                    <Download className="w-4 h-4" />
+                    <span>Coming soon</span>
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -87,33 +92,51 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks 
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {tracks.map((track) => (
-              <div
-                key={track.id}
-                className="bg-white rounded-2xl p-5 border border-brand-cream shadow-sm flex items-center justify-between"
-              >
-                <div className="flex items-center space-x-4 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">
-                    <Volume2 className="w-6 h-6" />
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-serif-heading text-base font-bold text-brand-teal-dark truncate">
-                      {track.title}
-                    </h4>
-                    <p className="text-xs text-stone-500 truncate">{track.author} • {track.duration}</p>
-                    <p className="text-[11px] text-stone-600 truncate mt-0.5">{track.description}</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onPlayTrack(track)}
-                  className="px-4 py-2 rounded-xl bg-brand-gold text-brand-teal-dark font-bold text-xs hover:bg-brand-gold shrink-0 ml-3 shadow-xs"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {tracks.map((track) => {
+              const scSrc = soundcloudEmbedSrc(track.audioUrl);
+              return (
+                <div
+                  key={track.id}
+                  className="bg-white rounded-2xl p-5 border border-brand-cream shadow-sm space-y-3"
                 >
-                  Play Audio
-                </button>
-              </div>
-            ))}
+                  <div className="flex items-start space-x-4 min-w-0">
+                    <div className="w-11 h-11 rounded-xl bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">
+                      <Volume2 className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-serif-heading text-base font-bold text-brand-teal-dark">
+                        {track.title}
+                      </h4>
+                      <p className="text-xs text-stone-500">{track.author}{track.duration ? ` • ${track.duration}` : ''}</p>
+                      {track.description && (
+                        <p className="text-[11px] text-stone-600 mt-0.5">{track.description}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {scSrc ? (
+                    <iframe
+                      title={track.title}
+                      width="100%"
+                      height="120"
+                      scrolling="no"
+                      frameBorder="no"
+                      loading="lazy"
+                      allow="autoplay"
+                      src={scSrc}
+                      className="rounded-lg"
+                    />
+                  ) : track.audioUrl ? (
+                    <audio controls preload="none" src={track.audioUrl} className="w-full">
+                      Your browser does not support audio.
+                    </audio>
+                  ) : (
+                    <p className="text-xs text-stone-400 italic">Audio coming soon.</p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 

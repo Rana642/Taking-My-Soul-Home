@@ -195,7 +195,7 @@ add_action('acf/init', function () {
             ['key' => 'f_au_category', 'label' => 'Category', 'name' => 'audioCategory', 'type' => 'select', 'show_in_graphql' => 1,
                 'choices' => ['Darood' => 'Darood', 'Wazifa' => 'Wazifa', 'Kalam' => 'Kalam', 'Recitation' => 'Recitation']],
             ['key' => 'f_au_duration', 'label' => 'Duration (m:ss)', 'name' => 'duration',   'type' => 'text', 'show_in_graphql' => 1],
-            ['key' => 'f_au_url',      'label' => 'Audio File',      'name' => 'audioUrl',   'type' => 'url', 'show_in_graphql' => 1],
+            ['key' => 'f_au_url',      'label' => 'Audio (SoundCloud link or MP3 URL)', 'name' => 'audioUrl', 'type' => 'url', 'instructions' => 'Paste a SoundCloud track link (or a direct .mp3 URL). The site renders the right player automatically.', 'show_in_graphql' => 1],
             ['key' => 'f_au_desc',     'label' => 'Description',     'name' => 'description', 'type' => 'textarea', 'show_in_graphql' => 1],
             // coverImage => featured image
         ],

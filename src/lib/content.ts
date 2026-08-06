@@ -41,3 +41,36 @@ export const youtubeEmbedUrl = (raw: string) => {
   const id = extractYouTubeId(raw);
   return id ? `https://www.youtube.com/embed/${id}` : '';
 };
+
+export const isSoundCloud = (raw?: string) => !!raw && /soundcloud\.com/i.test(raw);
+
+/**
+ * Build a SoundCloud player iframe `src` from whatever an editor pastes — a
+ * track/set URL, a full `<iframe>` embed snippet, or an existing player URL.
+ * Returns '' if the input isn't SoundCloud.
+ */
+export function soundcloudEmbedSrc(raw?: string): string {
+  if (!raw) return '';
+  const s = String(raw).trim().replace(/&amp;/g, '&');
+
+  // already a player URL (from a pasted embed iframe or copied player link)
+  const player = s.match(/https?:\/\/w\.soundcloud\.com\/player\/\?[^\s"']+/i);
+  if (player) return player[0];
+
+  // a plain track/set URL → wrap it in the player
+  const track = s.match(/https?:\/\/(?:www\.)?soundcloud\.com\/[^\s"']+/i);
+  if (track) {
+    const params = new URLSearchParams({
+      url: track[0],
+      color: '#0d373f',
+      auto_play: 'false',
+      hide_related: 'true',
+      show_comments: 'false',
+      show_user: 'true',
+      show_reposts: 'false',
+      visual: 'false',
+    });
+    return `https://w.soundcloud.com/player/?${params.toString()}`;
+  }
+  return '';
+}
