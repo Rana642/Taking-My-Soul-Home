@@ -53,24 +53,35 @@ export function soundcloudEmbedSrc(raw?: string): string {
   if (!raw) return '';
   const s = String(raw).trim().replace(/&amp;/g, '&');
 
-  // already a player URL (from a pasted embed iframe or copied player link)
-  const player = s.match(/https?:\/\/w\.soundcloud\.com\/player\/\?[^\s"']+/i);
-  if (player) return player[0];
-
-  // a plain track/set URL → wrap it in the player
-  const track = s.match(/https?:\/\/(?:www\.)?soundcloud\.com\/[^\s"']+/i);
-  if (track) {
-    const params = new URLSearchParams({
-      url: track[0],
-      color: '#0d373f',
-      auto_play: 'false',
-      hide_related: 'true',
-      show_comments: 'false',
-      show_user: 'true',
-      show_reposts: 'false',
-      visual: 'false',
-    });
-    return `https://w.soundcloud.com/player/?${params.toString()}`;
+  // Find the underlying track/set URL, whether the input is a plain link, a
+  // full <iframe> embed, or an already-built player URL. Prefer the public
+  // soundcloud.com URL; fall back to the api.soundcloud.com URL in `url=`.
+  let track = '';
+  const pretty = s.match(/https?:\/\/(?:www\.)?soundcloud\.com\/[^\s"'&?]+/i);
+  if (pretty) {
+    track = pretty[0];
+  } else {
+    const inPlayer = s.match(/[?&]url=([^&"'\s]+)/i);
+    if (inPlayer) track = decodeURIComponent(inPlayer[1]);
   }
-  return '';
+  if (!track) return '';
+
+  // Always rebuild with OUR minimal settings so the big visual artwork and
+  // extra SoundCloud chrome never show — just a clean compact waveform bar.
+  const params = new URLSearchParams({
+    url: track,
+    color: '#0d373f',
+    auto_play: 'false',
+    hide_related: 'true',
+    show_comments: 'false',
+    show_user: 'false',
+    show_reposts: 'false',
+    show_teaser: 'false',
+    show_artwork: 'false',
+    sharing: 'false',
+    buying: 'false',
+    download: 'false',
+    visual: 'false',
+  });
+  return `https://w.soundcloud.com/player/?${params.toString()}`;
 }
