@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock, Eye, Play, Share2, Check, Download, ListChecks } from 'lucide-react';
 import { EpisodeItem } from '../types';
-import { episodeSlug, youtubeEmbedUrl } from '../lib/content';
+import { episodeSlug, youtubeEmbedUrl, isInstagram, isInstagramReel, instagramEmbedUrl } from '../lib/content';
 
 interface EpisodeDetailViewProps {
   episode: EpisodeItem;
@@ -47,28 +47,43 @@ export const EpisodeDetailView: React.FC<EpisodeDetailViewProps> = ({
           <span>Back to Episodes</span>
         </Link>
 
-        {/* Video */}
-        <div className="relative aspect-video rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal">
-          {episode.youtubeEmbedId ? (
+        {/* Video / Reel embed */}
+        {episode.youtubeEmbedId && isInstagram(episode.youtubeEmbedId) ? (
+          <div className={`mx-auto rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal ${
+            isInstagramReel(episode.youtubeEmbedId)
+              ? 'max-w-sm aspect-[9/16]'
+              : 'max-w-lg aspect-square'
+          } relative`}>
             <iframe
               className="absolute inset-0 w-full h-full"
-              src={youtubeEmbedUrl(episode.youtubeEmbedId)}
+              src={instagramEmbedUrl(episode.youtubeEmbedId)}
               title={episode.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={episode.thumbnail} alt={episode.title} className="w-full h-full object-cover opacity-80" />
+          </div>
+        ) : (
+          <div className="relative aspect-video rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal">
+            {episode.youtubeEmbedId ? (
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={youtubeEmbedUrl(episode.youtubeEmbedId)}
+                title={episode.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-brand-gold text-brand-teal-dark flex items-center justify-center shadow-xl">
-                  <Play className="w-7 h-7 fill-current ml-1" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={episode.thumbnail} alt={episode.title} className="w-full h-full object-cover opacity-80" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-brand-gold text-brand-teal-dark flex items-center justify-center shadow-xl">
+                    <Play className="w-7 h-7 fill-current ml-1" />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* Header */}
         <header className="space-y-3">

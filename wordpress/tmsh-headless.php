@@ -152,7 +152,7 @@ add_action('acf/init', function () {
         'fields'   => [
             ['key' => 'f_ep_series',     'label' => 'Series',          'name' => 'series',         'type' => 'post_object', 'post_type' => ['series'], 'return_format' => 'object', 'show_in_graphql' => 1],
             ['key' => 'f_ep_duration',   'label' => 'Duration (m:ss)', 'name' => 'duration',       'type' => 'text',        'show_in_graphql' => 1],
-            ['key' => 'f_ep_youtube',    'label' => 'YouTube Embed ID','name' => 'youtubeEmbedId', 'type' => 'text',        'show_in_graphql' => 1],
+            ['key' => 'f_ep_youtube',    'label' => 'Video Link (YouTube or Instagram)', 'name' => 'youtubeEmbedId', 'type' => 'text', 'instructions' => 'Paste a YouTube link/ID or an Instagram post/reel URL.', 'show_in_graphql' => 1],
             ['key' => 'f_ep_views',      'label' => 'Views',           'name' => 'views',          'type' => 'text',        'show_in_graphql' => 1],
             ['key' => 'f_ep_transcript', 'label' => 'Transcript',      'name' => 'transcript',     'type' => 'textarea',    'rows' => 8, 'show_in_graphql' => 1],
             ['key' => 'f_ep_takeaways',  'label' => 'Key Takeaways',   'name' => 'keyTakeaways',   'type' => 'repeater',    'show_in_graphql' => 1,

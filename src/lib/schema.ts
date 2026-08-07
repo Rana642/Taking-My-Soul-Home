@@ -1,6 +1,6 @@
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from './site';
 import type { BlogPost, EpisodeItem } from '../types';
-import { episodeSlug, durationToISO, youtubeEmbedUrl } from './content';
+import { episodeSlug, durationToISO, youtubeEmbedUrl, isInstagram } from './content';
 
 const publisher = {
   '@type': 'Organization',
@@ -108,7 +108,9 @@ export function videoObjectSchema(ep: EpisodeItem) {
     thumbnailUrl: ep.thumbnail,
     ...(uploadDate ? { uploadDate } : {}),
     ...(duration ? { duration } : {}),
-    ...(ep.youtubeEmbedId ? { embedUrl: youtubeEmbedUrl(ep.youtubeEmbedId) } : {}),
+    ...(ep.youtubeEmbedId && !isInstagram(ep.youtubeEmbedId)
+      ? { embedUrl: youtubeEmbedUrl(ep.youtubeEmbedId) }
+      : {}),
     url,
     publisher,
   };

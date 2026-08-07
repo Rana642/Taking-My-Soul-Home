@@ -42,3 +42,27 @@ export const youtubeEmbedUrl = (raw: string) => {
   return id ? `https://www.youtube.com/embed/${id}` : '';
 };
 
+/* ── Instagram helpers ─────────────────────────────────────────────── */
+
+export const isInstagram = (raw?: string) =>
+  !!raw && /instagram\.com\/(p|reel|tv)\//i.test(raw);
+
+export const isInstagramReel = (raw?: string) =>
+  !!raw && /instagram\.com\/reel\//i.test(raw);
+
+export function extractInstagramCode(raw?: string): string {
+  if (!raw) return '';
+  const m = String(raw).trim().match(
+    /instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/i,
+  );
+  return m ? m[1] : '';
+}
+
+export function instagramEmbedUrl(raw?: string): string {
+  if (!raw) return '';
+  const s = String(raw).trim();
+  const m = s.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/i);
+  if (!m) return '';
+  return `https://www.instagram.com/${m[1]}/${m[2]}/embed/`;
+}
+
