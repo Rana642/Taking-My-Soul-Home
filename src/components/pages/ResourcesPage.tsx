@@ -3,7 +3,6 @@
 import React from 'react';
 import { Download, FileText, Volume2, BookOpen } from 'lucide-react';
 import { ResourceItem, AudioTrack } from '../../types';
-import { soundcloudEmbedSrc } from '../../lib/content';
 
 interface ResourcesPageProps {
   resources: ResourceItem[];
@@ -93,50 +92,35 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, tracks 
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tracks.map((track) => {
-              const scSrc = soundcloudEmbedSrc(track.audioUrl);
-              return (
-                <div
-                  key={track.id}
-                  className="bg-white rounded-2xl p-5 border border-brand-cream shadow-sm space-y-3"
-                >
-                  <div className="flex items-start space-x-4 min-w-0">
-                    <div className="w-11 h-11 rounded-xl bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">
-                      <Volume2 className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-serif-heading text-base font-bold text-brand-teal-dark">
-                        {track.title}
-                      </h4>
-                      <p className="text-xs text-stone-500">{track.author}{track.duration ? ` • ${track.duration}` : ''}</p>
-                      {track.description && (
-                        <p className="text-[11px] text-stone-600 mt-0.5">{track.description}</p>
-                      )}
-                    </div>
+            {tracks.map((track) => (
+              <div
+                key={track.id}
+                className="bg-white rounded-2xl p-5 border border-brand-cream shadow-sm space-y-3"
+              >
+                <div className="flex items-start space-x-4 min-w-0">
+                  <div className="w-11 h-11 rounded-xl bg-brand-teal-dark text-brand-gold flex items-center justify-center shrink-0">
+                    <Volume2 className="w-5 h-5" />
                   </div>
-
-                  {scSrc ? (
-                    <iframe
-                      title={track.title}
-                      width="100%"
-                      height="120"
-                      scrolling="no"
-                      frameBorder="no"
-                      loading="lazy"
-                      allow="autoplay"
-                      src={scSrc}
-                      className="rounded-lg"
-                    />
-                  ) : track.audioUrl ? (
-                    <audio controls preload="none" src={track.audioUrl} className="w-full">
-                      Your browser does not support audio.
-                    </audio>
-                  ) : (
-                    <p className="text-xs text-stone-400 italic">Audio coming soon.</p>
-                  )}
+                  <div className="min-w-0">
+                    <h4 className="font-serif-heading text-base font-bold text-brand-teal-dark">
+                      {track.title}
+                    </h4>
+                    <p className="text-xs text-stone-500">{track.author}{track.duration ? ` • ${track.duration}` : ''}</p>
+                    {track.description && (
+                      <p className="text-[11px] text-stone-600 mt-0.5">{track.description}</p>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
+
+                {track.audioUrl ? (
+                  <audio controls preload="none" src={track.audioUrl} className="w-full">
+                    Your browser does not support audio.
+                  </audio>
+                ) : (
+                  <p className="text-xs text-stone-400 italic">Audio coming soon.</p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 

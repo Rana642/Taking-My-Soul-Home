@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Heart, Menu, X } from 'lucide-react';
@@ -26,13 +26,25 @@ function isRouteActive(pathname: string, to: string): boolean {
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { openSearch } = useAppShell();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-transparent text-brand-teal-dark transition-all duration-300">
+    <header className={`sticky top-0 z-40 text-brand-teal-dark transition-all duration-300 ${
+      scrolled
+        ? 'bg-brand-cream/80 backdrop-blur-xl shadow-sm border-b border-brand-teal-dark/10'
+        : 'bg-transparent'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
 
