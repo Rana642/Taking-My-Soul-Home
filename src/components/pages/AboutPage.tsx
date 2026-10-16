@@ -61,7 +61,7 @@ export const AboutPage: React.FC = () => {
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-72 h-80 sm:w-80 sm:h-96 rounded-2xl overflow-hidden shadow-xl border-4 border-brand-gold">
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+                  src="/images/freha-wahla.jpg"
                   alt="Freha Wahla Profile"
                   className="w-full h-full object-cover"
                 />

@@ -94,7 +94,7 @@ export const TEAM_INFO = {
     name: 'Freha Wahla',
     role: 'Founder & Writer',
     bio: 'All stories are written and narrated by Freha Wahla with the purpose of reviving hearts and drawing people closer to Allah and His Beloved ﷺ.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    avatar: '/images/freha-wahla.jpg'
   },
   executedBy: {
     title: 'Executed by',
