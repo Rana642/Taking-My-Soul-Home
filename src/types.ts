@@ -33,6 +33,8 @@ export interface EpisodeItem {
   thumbnail: string;
   videoUrl?: string;
   youtubeEmbedId?: string;
+  instagramPermalink?: string;
+  instagramMediaType?: string;
   date: string;
   views?: string;
   transcript?: string;

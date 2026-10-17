@@ -48,42 +48,54 @@ export const EpisodeDetailView: React.FC<EpisodeDetailViewProps> = ({
         </Link>
 
         {/* Video / Reel embed */}
-        {episode.youtubeEmbedId && isInstagram(episode.youtubeEmbedId) ? (
-          <div className={`mx-auto rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal ${
-            isInstagramReel(episode.youtubeEmbedId)
-              ? 'max-w-sm aspect-[9/16]'
-              : 'max-w-lg aspect-square'
-          } relative`}>
-            <iframe
-              className="absolute inset-0 w-full h-full"
-              src={instagramEmbedUrl(episode.youtubeEmbedId)}
-              title={episode.title}
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal">
-            {episode.youtubeEmbedId ? (
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src={youtubeEmbedUrl(episode.youtubeEmbedId)}
-                title={episode.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={episode.thumbnail} alt={episode.title} className="w-full h-full object-cover opacity-80" />
+        {(() => {
+          const igSource = episode.youtubeEmbedId && isInstagram(episode.youtubeEmbedId)
+            ? episode.youtubeEmbedId
+            : episode.instagramPermalink && isInstagram(episode.instagramPermalink)
+              ? episode.instagramPermalink
+              : null;
+
+          if (igSource) {
+            return (
+              <div className={`mx-auto rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal ${
+                isInstagramReel(igSource)
+                  ? 'max-w-sm aspect-[9/16]'
+                  : 'max-w-lg aspect-square'
+              } relative`}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={instagramEmbedUrl(igSource)}
+                  title={episode.title}
+                  allowFullScreen
+                />
+              </div>
+            );
+          }
+
+          return (
+            <div className="relative aspect-video rounded-2xl overflow-hidden bg-brand-teal-dark shadow-xl border border-brand-teal">
+              {episode.youtubeEmbedId ? (
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={youtubeEmbedUrl(episode.youtubeEmbedId)}
+                  title={episode.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-brand-gold text-brand-teal-dark flex items-center justify-center shadow-xl">
-                    <Play className="w-7 h-7 fill-current ml-1" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={episode.thumbnail} alt={episode.title} className="w-full h-full object-cover opacity-80" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-brand-gold text-brand-teal-dark flex items-center justify-center shadow-xl">
+                      <Play className="w-7 h-7 fill-current ml-1" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          );
+        })()}
 
         {/* Header */}
         <header className="space-y-3">
