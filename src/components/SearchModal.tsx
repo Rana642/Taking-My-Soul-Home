@@ -4,13 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Film, BookOpen, Volume2, ArrowRight } from 'lucide-react';
 import { AudioTrack } from '../types';
-
-const WP_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL ||
-  'https://cms.takingmysoulhome.com/graphql';
-
-const strip = (s?: string) =>
-  (s || '').replace(/<[^>]+>/g, '').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+import { sanity } from '../lib/sanity';
 
 interface SeriesHit { slug: string; title: string; tagline: string; }
 interface EpisodeHit { slug: string; title: string; excerpt: string; seriesTitle: string; duration: string; }
@@ -18,13 +12,6 @@ interface PostHit { slug: string; title: string; excerpt: string; category: stri
 interface SearchData { series: SeriesHit[]; episodes: EpisodeHit[]; posts: PostHit[]; audio: AudioTrack[]; }
 
 const EMPTY: SearchData = { series: [], episodes: [], posts: [], audio: [] };
-
-const SEARCH_QUERY = `{
-  allSeries(first: 50) { nodes { slug title seriesFields { tagline } } }
-  episodes(first: 100) { nodes { slug title excerpt episodeFields { duration series { nodes { ... on Series { title } } } } } }
-  posts(first: 100) { nodes { slug title excerpt categories { nodes { name } } articleFields { readTime } } }
-  audioTracks(first: 50) { nodes { databaseId title audioFields { author audioCategory duration audioUrl description } featuredImage { node { sourceUrl } } } }
-}`;
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -37,38 +24,21 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   const [data, setData] = useState<SearchData>(EMPTY);
   const [loaded, setLoaded] = useState(false);
 
-  // Fetch the search index the first time the modal opens.
   useEffect(() => {
     if (!isOpen || loaded) return;
     (async () => {
       try {
-        const res = await fetch(WP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: SEARCH_QUERY }),
-        });
-        const j = await res.json();
-        const d = j?.data || {};
+        const [seriesData, episodesData, postsData, audioData] = await Promise.all([
+          sanity.fetch(`*[_type == "series"] | order(order asc) { "slug": slug.current, title, tagline }`),
+          sanity.fetch(`*[_type == "episode"] | order(publishedAt desc) [0...200] { "slug": slug.current, title, excerpt, "seriesTitle": series->title, duration }`),
+          sanity.fetch(`*[_type == "blogPost"] | order(publishedAt desc) { "slug": slug.current, title, excerpt, category, readTime }`),
+          sanity.fetch(`*[_type == "audioTrack"] { "id": _id, title, author, category, duration, "audioUrl": coalesce(audioFile.asset->url, audioUrl), description, "coverImage": coverImage.asset->url }`),
+        ]);
         setData({
-          series: (d.allSeries?.nodes || []).map((n: any) => ({
-            slug: n.slug, title: strip(n.title), tagline: n.seriesFields?.tagline || '',
-          })),
-          episodes: (d.episodes?.nodes || []).map((n: any) => ({
-            slug: n.slug, title: strip(n.title), excerpt: strip(n.excerpt),
-            seriesTitle: strip(n.episodeFields?.series?.nodes?.[0]?.title),
-            duration: n.episodeFields?.duration || '',
-          })),
-          posts: (d.posts?.nodes || []).map((n: any) => ({
-            slug: n.slug, title: strip(n.title), excerpt: strip(n.excerpt),
-            category: n.categories?.nodes?.[0]?.name || '',
-            readTime: n.articleFields?.readTime || '',
-          })),
-          audio: (d.audioTracks?.nodes || []).map((n: any): AudioTrack => ({
-            id: String(n.databaseId), title: strip(n.title), author: n.audioFields?.author || '',
-            category: (Array.isArray(n.audioFields?.audioCategory) ? n.audioFields.audioCategory[0] : 'Recitation') as AudioTrack['category'],
-            duration: n.audioFields?.duration || '', audioUrl: n.audioFields?.audioUrl || '',
-            description: strip(n.audioFields?.description), coverImage: n.featuredImage?.node?.sourceUrl || '',
-          })),
+          series: seriesData || [],
+          episodes: (episodesData || []).map((e: any) => ({ ...e, seriesTitle: e.seriesTitle || '', duration: e.duration || '' })),
+          posts: (postsData || []).map((p: any) => ({ ...p, category: p.category || '', readTime: p.readTime || '' })),
+          audio: (audioData || []).map((a: any) => ({ ...a, category: a.category || 'Recitation', description: a.description || '' })),
         });
         setLoaded(true);
       } catch {

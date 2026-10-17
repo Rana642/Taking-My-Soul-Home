@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { EpisodeDetailEntry } from '../../components/entries';
+import { getAllEpisodes, getEpisodeBySlug, getRelatedEpisodes } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const episodes = await getAllEpisodes(1000);
+  return episodes.map((ep: any) => ({ params: { slug: ep.slug } }));
+}
+
+const { slug } = Astro.params;
+const episode = await getEpisodeBySlug(slug!);
+
+if (!episode) {
+  return Astro.redirect('/404');
+}
+
+const allEpisodes = await getAllEpisodes(1000);
+const related = getRelatedEpisodes(episode, allEpisodes);
+---
+
+<BaseLayout
+  title={episode.title}
+  description={episode.excerpt}
+  image={episode.thumbnail}
+>
+  <EpisodeDetailEntry
+    client:load
+    episode={episode}
+    related={related}
+    seriesSlug={episode.seriesSlug}
+  />
+</BaseLayout>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { LegalEntry } from '../../components/entries';
+
+const TITLES: Record<string, string> = {
+  privacy: 'Privacy Policy',
+  terms: 'Terms & Conditions',
+  disclaimer: 'Disclaimer & AdSense Disclosure',
+  sitemap: 'Sitemap & Directory',
+};
+
+export function getStaticPaths() {
+  return ['privacy', 'terms', 'disclaimer', 'sitemap'].map((type) => ({
+    params: { type },
+  }));
+}
+
+const { type } = Astro.params;
+const title = TITLES[type!];
+
+if (!title) {
+  return Astro.redirect('/404');
+}
+---
+
+<BaseLayout
+  title={title}
+  description={`${title} — Taking My Soul Home.`}
+>
+  <LegalEntry client:load type={type!} />
+</BaseLayout>

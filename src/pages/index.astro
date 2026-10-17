@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { HomeEntry } from '../components/entries';
+import { getAllSeries, getAllEpisodes, getAllPosts, getAudioTracks } from '../lib/sanity';
+
+const [series, episodes, posts, tracks] = await Promise.all([
+  getAllSeries(),
+  getAllEpisodes(5),
+  getAllPosts(),
+  getAudioTracks(),
+]);
+---
+
+<BaseLayout>
+  <HomeEntry
+    client:load
+    series={series}
+    episodes={episodes}
+    posts={posts.slice(0, 5)}
+    tracks={tracks}
+  />
+</BaseLayout>

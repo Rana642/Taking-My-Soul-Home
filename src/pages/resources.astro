@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ResourcesEntry } from '../components/entries';
+import { getResources, getAudioTracks } from '../lib/sanity';
+
+const [resources, tracks] = await Promise.all([getResources(), getAudioTracks()]);
+---
+
+<BaseLayout
+  title="Resources & Downloads"
+  description="Free downloadable PDF supplication booklets, Zikr guides, and high-quality audio recitations."
+>
+  <ResourcesEntry client:load resources={resources} tracks={tracks} />
+</BaseLayout>

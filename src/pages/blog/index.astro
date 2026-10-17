@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BlogListEntry } from '../../components/entries';
+import { getAllPosts } from '../../lib/sanity';
+
+const posts = await getAllPosts();
+---
+
+<BaseLayout
+  title="Blog"
+  description="Articles on Quranic reflections, the lives of the Prophets, daily wazaif, and spiritual growth to revive the heart."
+>
+  <BlogListEntry client:load posts={posts} />
+</BaseLayout>

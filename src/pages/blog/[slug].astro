@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BlogPostDetailEntry } from '../../components/entries';
+import { getAllPosts, getPostBySlug } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((p: any) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const [post, allPosts] = await Promise.all([getPostBySlug(slug!), getAllPosts()]);
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const related = allPosts.filter((p: any) => p.id !== post.id).slice(0, 3);
+---
+
+<BaseLayout
+  title={post.title}
+  description={post.excerpt}
+  image={post.featuredImage}
+>
+  <BlogPostDetailEntry client:load post={post} related={related} />
+</BaseLayout>

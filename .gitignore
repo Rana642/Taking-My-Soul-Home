@@ -11,5 +11,11 @@ coverage/
 .next/
 out/
 
+# Astro
+.astro/
+
+# Sanity Studio local deps
+sanity/node_modules/
+
 # Leftover deploy artifact (see plan Step 12)
 hostinger-deploy.zip

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AboutEntry } from '../components/entries';
+---
+
+<BaseLayout
+  title="About"
+  description="Meet Freha Wahla — the writer and narrator behind Taking My Soul Home, and author of two books published by Austin Macauley Publishers."
+>
+  <AboutEntry client:load />
+</BaseLayout>

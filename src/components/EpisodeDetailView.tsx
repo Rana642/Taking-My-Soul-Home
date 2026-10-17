@@ -87,12 +87,14 @@ export const EpisodeDetailView: React.FC<EpisodeDetailViewProps> = ({
 
         {/* Header */}
         <header className="space-y-3">
-          <Link
-            href={`/series/${seriesSlug}`}
-            className="inline-block text-xs font-bold text-brand-teal-dark uppercase tracking-wider hover:text-brand-teal"
-          >
-            {episode.seriesTitle}
-          </Link>
+          {seriesSlug && (
+            <Link
+              href={`/series/${seriesSlug}`}
+              className="inline-block text-xs font-bold text-brand-teal-dark uppercase tracking-wider hover:text-brand-teal"
+            >
+              {episode.seriesTitle}
+            </Link>
+          )}
           <h1 className="font-serif-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-teal-dark leading-tight">
             {episode.title}
           </h1>

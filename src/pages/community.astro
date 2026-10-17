@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CommunityEntry } from '../components/entries';
+---
+
+<BaseLayout
+  title="Community"
+  description="Join a global family of believers. Merchandise proceeds and donations support charitable projects for those in need."
+>
+  <CommunityEntry client:load />
+</BaseLayout>

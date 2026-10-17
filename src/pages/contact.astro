@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ContactEntry } from '../components/entries';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Questions about our video series, audio recitations, or collaborations? Reach out to the team."
+>
+  <ContactEntry client:load />
+</BaseLayout>

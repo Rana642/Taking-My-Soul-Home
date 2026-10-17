@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SeriesListEntry } from '../../components/entries';
+import { getAllSeries } from '../../lib/sanity';
+
+const series = await getAllSeries();
+---
+
+<BaseLayout
+  title="Video Series"
+  description="Cinematic Islamic video series exploring the lives of the Prophets, the beautiful names of Allah, and deep heart reflections."
+>
+  <SeriesListEntry client:load series={series} />
+</BaseLayout>

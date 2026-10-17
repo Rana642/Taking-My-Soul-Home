@@ -1,5 +1,4 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
 
 type LegalType = 'privacy' | 'terms' | 'disclaimer' | 'sitemap';
 
@@ -11,7 +10,7 @@ const TITLES: Record<LegalType, string> = {
 };
 
 export const LegalPage: React.FC<{ type: string }> = ({ type: rawType }) => {
-  if (!(rawType in TITLES)) notFound();
+  if (!(rawType in TITLES)) return null;
   const type = rawType as LegalType;
 
   return (

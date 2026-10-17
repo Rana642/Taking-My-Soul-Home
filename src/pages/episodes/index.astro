@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { EpisodesListEntry } from '../../components/entries';
+import { getAllEpisodes } from '../../lib/sanity';
+
+const episodes = await getAllEpisodes();
+---
+
+<BaseLayout
+  title="Episodes"
+  description="Watch cinematic episodes with full transcripts, reflections, and audio options."
+>
+  <EpisodesListEntry client:load episodes={episodes} />
+</BaseLayout>
